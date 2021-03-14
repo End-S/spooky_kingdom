@@ -28,7 +28,7 @@ func Register(api *echo.Group, h *handler.Handler) {
 	articles.GET("", h.AC.GetArticles)
 	articles.POST("/update", h.AC.UpdateArticle, admin)
 	articles.DELETE("/:id", h.AC.DeleteArticle, admin)
-
-	// LOCATIONS
-
+	// PUBLISHERS
+	publishers := api.Group("/publishers")
+	publishers.GET("", h.PC.GetPublishers)
 }

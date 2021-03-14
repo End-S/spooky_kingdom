@@ -1,0 +1,304 @@
+<template>
+  <section class="container px-2 grid-container">
+    <section class="grid-header">
+      <div class="field field-body">
+        <b-field label="From">
+          <b-datepicker
+            v-model="articleFilters.date.from"
+            ref="fromDate"
+            expanded
+            placeholder="From date"
+          >
+          </b-datepicker>
+          <b-button
+            @click="$refs.fromDate.toggle()"
+            icon-left="calendar-today"
+            type="is-primary"
+          />
+        </b-field>
+        <b-field label="To">
+          <b-datepicker
+            v-model="articleFilters.date.to"
+            ref="toDate"
+            expanded
+            placeholder="To date"
+          >
+          </b-datepicker>
+          <b-button
+            @click="$refs.toDate.toggle()"
+            icon-left="calendar-today"
+            type="is-primary"
+          />
+        </b-field>
+      </div>
+      <b-field>
+        <b-radio
+          v-for="option in ordering"
+          v-model="articleFilters.order"
+          :key="option"
+          name="ordering"
+          :native-value="option"
+        >
+          {{ option | caps }}
+        </b-radio>
+      </b-field>
+      <b-field>
+        <b-radio
+          v-for="option in sorting"
+          v-model="articleFilters.sortBy"
+          :key="option"
+          name="sorting"
+          :native-value="option"
+        >
+          {{ option | caps }}
+        </b-radio>
+      </b-field>
+      <b-field>
+        <b-radio-button
+          v-for="option in subjects"
+          v-model="articleFilters.subject"
+          :key="option.value"
+          name="subjects"
+          :native-value="option.value"
+        >
+          {{ option.title }}
+        </b-radio-button>
+      </b-field>
+      <b-collapse
+        class="card mb-4"
+        animation="slide"
+        aria-id="publisherFilter"
+        :open="false"
+      >
+        <template #trigger="card">
+          <div
+            class="card-header"
+            role="button"
+            aria-controls="publisherFilter"
+          >
+            <p class="card-header-title has-text-weight-medium">
+              Filter by publisher...
+            </p>
+            <a class="card-header-icon">
+              <b-icon :icon="card.open ? 'menu-down' : 'menu-up'"></b-icon>
+            </a>
+          </div>
+        </template>
+
+        <div class="card-content">
+          <div class="content">
+            <b-checkbox
+              v-for="option in publishers"
+              v-model="articleFilters.publishers"
+              :key="option.id"
+              :native-value="option.id"
+            >
+              {{ option.label }}
+            </b-checkbox>
+          </div>
+        </div>
+      </b-collapse>
+      <div class="buttons">
+        <b-button type="is-primary is-light is-pulled-left" @click="submit"
+        >Submit
+        </b-button
+        >
+        <b-button type="is-warning is-light is-pulled-left">Reset</b-button>
+      </div>
+    </section>
+    <section class="grid-content">
+      <article-card
+        v-for="article in articleList"
+        v-bind:article="article"
+        v-bind:key="article.id"
+      ></article-card>
+    </section>
+    <footer class="footer">
+      <b-pagination
+        :total="totalResults"
+        v-model="currentPage"
+        :range-before="2"
+        :range-after="2"
+        :per-page="pageSize"
+        :icon-prev="'chevron-left'"
+        :icon-next="'chevron-right'"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page"
+      >
+      </b-pagination>
+      <b-field>
+        <b-radio
+          v-for="option in perPageOptions"
+          v-model="pageSize"
+          :key="option"
+          name="perPageOptions"
+          :native-value="option"
+        >
+          {{ option.toString() }}
+        </b-radio>
+      </b-field>
+    </footer>
+  </section>
+</template>
+
+<style lang="scss">
+.grid-container {
+  grid-template-rows: auto 1fr auto; // 52px is height of the header
+  grid-template-areas:
+  'header'
+  'content'
+  'footer';
+  display: grid;
+  height: 100vh;
+}
+
+.grid-header {
+  padding-top: 1rem;
+  grid-area: header;
+}
+
+.grid-content {
+  grid-area: content;
+  margin: auto;
+}
+
+footer {
+  grid-area: footer;
+}
+
+.footer {
+  padding: 1.5rem 3rem;
+}
+</style>
+
+<script lang="ts">
+import {
+  Component,
+  Vue,
+} from 'vue-property-decorator';
+import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import {
+  ArticleFilters,
+  ArticleSortBy,
+  Ordering,
+  Subjects,
+} from '@/common/models/article.model';
+import {
+  capitalize,
+  cloneDeep,
+  upperCase,
+} from 'lodash-es';
+import { Publisher } from '@/common/models/publisher.model';
+import publishers from '@/api/publishers';
+import ArticleCard from '@/components/ArticleCard.vue';
+
+@Component({
+  components: {
+    ArticleCard,
+    HelloWorld,
+  },
+  computed: {
+    articleList() {
+      return this.$store.state.articleList;
+    },
+    currentPage: {
+      get() {
+        return this.$store.state.currentPage;
+      },
+      set(currentPage) {
+        this.$store.commit('setCurrentPage', currentPage);
+        this.$store.dispatch('getArticles', this.$store);
+      },
+    },
+    pageSize: {
+      get() {
+        return this.$store.state.pageSize;
+      },
+      set(pageSize) {
+        this.$store.commit('setPageSize', pageSize);
+        this.$store.dispatch('getArticles', this.$store);
+      },
+    },
+    totalResults() {
+      return this.$store.state.totalResults;
+    },
+  },
+  filters: {
+    caps: (s: string): string => capitalize(s),
+  },
+})
+export default class Home extends Vue {
+  articleFilters: ArticleFilters = cloneDeep(this.$store.state.articleFilters);
+
+  ordering: string[] = [ Ordering.ASCENDING, Ordering.DESCENDING ];
+  sorting: string[] = [
+    ArticleSortBy.DATE,
+    ArticleSortBy.DESCRIPTION,
+    ArticleSortBy.TITLE,
+  ];
+  subjects: { title: string; value: Subjects | '' }[] = [
+    { title: 'All', value: Subjects.ALL },
+    { title: `👻 ${ capitalize(Subjects.GHOST) }`, value: Subjects.GHOST },
+    { title: `🛸 ${ upperCase(Subjects.UFO) }`, value: Subjects.UFO },
+    { title: `🐾 ${ capitalize(Subjects.WEIRD) }`, value: Subjects.WEIRD },
+  ];
+  perPageOptions: number[] = [ 10, 25, 50 ];
+  publishers: Publisher[] = [];
+
+  constructor() {
+    super();
+    publishers.get(
+      (res) => this.publishers.push(...res.data.publishers),
+      (err) => this.$store.commit('error', err),
+    );
+    this.$store.dispatch('getArticles', this.$store);
+  }
+
+  submit(): void {
+    this.$store.commit('setFilters', cloneDeep(this.articleFilters));
+    this.$store.commit('setCurrentPage', 1);
+    this.$store.dispatch('getArticles', this.$store);
+  }
+}
+</script>
+
+<!--this.publishers.push(...[-->
+<!--{-->
+<!--id: '3d438cb2-cd05-48f0-8b29-cbcac1ebf97a',-->
+<!--name: 'plymouthlive',-->
+<!--label: 'Plymouth Herald',-->
+<!--latlng: [-->
+<!--0,-->
+<!--0,-->
+<!--],-->
+<!--},-->
+<!--{-->
+<!--id: '6a1f756f-73b0-445b-b9b0-067de37438cc',-->
+<!--name: 'manchestereveningnews',-->
+<!--label: 'Manchester Evening News',-->
+<!--latlng: [-->
+<!--0,-->
+<!--0,-->
+<!--],-->
+<!--},-->
+<!--{-->
+<!--id: '8da7d038-7633-4986-af2f-000731fe9eb9',-->
+<!--name: 'yorkshireeveningpost',-->
+<!--label: 'Yorkshire Evening Post',-->
+<!--latlng: [-->
+<!--0,-->
+<!--0,-->
+<!--],-->
+<!--},-->
+<!--{-->
+<!--id: 'd9783f7a-2cca-4faf-ac8c-47fd5177489b',-->
+<!--name: 'liverpoolecho',-->
+<!--label: 'Liverpool Echo',-->
+<!--latlng: [-->
+<!--53.408371,-->
+<!-- -2.991573,-->
+<!--],-->
+<!--},-->
+<!--]);-->

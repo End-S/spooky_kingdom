@@ -75,7 +75,7 @@ func (ac *ArticleController) UpdateArticle(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to update article"))
 	}
 
-	return c.JSON(http.StatusOK, responses.NewUpdateArticlesResponse(article))
+	return c.JSON(http.StatusOK, responses.NewUpdateArticlesResponse(*article))
 }
 
 // DeleteArticle function handles a delete request for an article

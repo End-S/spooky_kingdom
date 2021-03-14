@@ -45,9 +45,7 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 		count    int64
 	)
 
-	qry := am.db.Offset(req.Offset).
-		Limit(req.Limit).
-		Where("accepted = ?", !assessPending)
+	qry := am.db.Where("accepted = ?", !assessPending)
 
 	if req.Subject != "" {
 		// filter by subject
@@ -74,26 +72,29 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 		qry.Order(clause.OrderByColumn{Column: clause.Column{Name: "date_published"}, Desc: req.Order == "desc"})
 	}
 
-	// perform query
-	qry.Find(&articles).Count(&count)
+	// count affected
+	qry.Model(&articles).Count(&count)
+	// paginate results
+	qry.Offset(req.Offset).
+		Limit(req.Limit).Find(&articles)
 
 	return articles, count, nil
 }
 
 // Update updates an article and returns the updated article
-func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (Article, error) {
+func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) {
 	var article Article
 
 	res := am.db.Where("article_id = ?", req.ID).
 		Updates(Article{Description: req.Description, ArticleType: req.Subject, Accepted: req.Accepted})
 
 	if res.Error != nil {
-		return article, res.Error
+		return nil, res.Error
 	}
 
 	am.db.First(&article, req.ID)
 
-	return article, res.Error
+	return &article, res.Error
 }
 
 // Delete removes the article from the database
