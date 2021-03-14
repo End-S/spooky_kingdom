@@ -7,12 +7,19 @@ import (
 )
 
 type Config struct {
-	DSN       string
+	DSN      string
+	Postgres struct {
+		Username string
+		Password string
+		Host     string
+		Port     string
+	}
 	JWTSecret []byte
 	Admin     struct {
 		Username string
 		Password string
 	}
+	APIKey string
 }
 
 // C holds global config
@@ -30,9 +37,15 @@ func loadConfig() {
 	}
 
 	C.DSN = viper.GetString("postgresql.dsn")
+	C.Postgres.Username = viper.GetString("postgresql.username")
+	C.Postgres.Password = viper.GetString("postgresql.password")
+	C.Postgres.Host = viper.GetString("postgresql.host")
+	C.Postgres.Port = viper.GetString("postgresql.port")
 	C.JWTSecret = []byte(viper.GetString("jwt.secret"))
 	C.Admin.Username = viper.GetString("admin.username")
 	C.Admin.Password = viper.GetString("admin.password")
+	C.APIKey = viper.GetString("api.key")
+
 	cIsLoaded = true
 }
 

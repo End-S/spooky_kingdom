@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -14,13 +15,12 @@ import (
 // ArticleModel struct
 type ArticleModel struct {
 	db *gorm.DB
+	pm *PublisherModel
 }
 
 // NewArticleModel creates a new article model instance
-func NewArticleModel(db *gorm.DB) *ArticleModel {
-	return &ArticleModel{
-		db: db,
-	}
+func NewArticleModel(db *gorm.DB, pm *PublisherModel) *ArticleModel {
+	return &ArticleModel{db, pm}
 }
 
 // Article struct
@@ -45,9 +45,7 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 		count    int64
 	)
 
-	qry := am.db.Offset(req.Offset).
-		Limit(req.Limit).
-		Where("accepted = ?", !assessPending)
+	qry := am.db.Table("articles").Where("accepted = ?", !assessPending)
 
 	if req.Subject != "" {
 		// filter by subject
@@ -74,31 +72,76 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 		qry.Order(clause.OrderByColumn{Column: clause.Column{Name: "date_published"}, Desc: req.Order == "desc"})
 	}
 
-	// perform query
-	qry.Find(&articles).Count(&count)
+	// count affected
+	qry.Model(&articles).Count(&count)
+	// paginate results
+	qry.Offset(req.Offset).
+		Limit(req.Limit).Find(&articles)
 
 	return articles, count, nil
 }
 
 // Update updates an article and returns the updated article
-func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (Article, error) {
+func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) {
 	var article Article
 
-	res := am.db.Where("article_id = ?", req.ID).
+	res := am.db.Table("articles").Where("article_id = ?", req.ID).
 		Updates(Article{Description: req.Description, ArticleType: req.Subject, Accepted: req.Accepted})
 
 	if res.Error != nil {
-		return article, res.Error
+		return nil, res.Error
 	}
 
-	am.db.First(&article, req.ID)
+	am.db.Table("articles").First(&article, req.ID)
 
-	return article, res.Error
+	return &article, res.Error
+}
+
+// Store stores an article and returns the stored article
+func (am *ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
+	var article Article
+	var pub Publisher
+
+	am.db.Table("publishers").Where("name = ?", req.PublisherName).First(&pub)
+
+	if pub.Name == "" {
+		// publisher not found create one
+		newPub, err := am.pm.Create(&requests.CreatePublisherReq{
+			Name:  req.PublisherName,
+			Label: strings.Title(strings.ToLower(req.PublisherName)),
+		})
+		if err != nil {
+			return nil, err
+		}
+		pub = *newPub
+	}
+
+	uuid := uuid.New()
+	// store the article
+	res := am.db.Table("articles").Create(Article{
+		ArticleID:     uuid,
+		PublisherID:   pub.PublisherID,
+		Publisher:     pub.Name,
+		DatePublished: time.Unix(req.DatePublished, 0),
+		DateRetrieved: time.Unix(req.DateRetrieved, 0),
+		Title:         req.Title,
+		Description:   req.Description,
+		Link:          req.Link,
+		ArticleType:   req.Subject,
+	})
+
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	am.db.Table("articles").Where("article_id = ?", uuid).First(&article)
+
+	return &article, nil
 }
 
 // Delete removes the article from the database
 func (am *ArticleModel) Delete(id uuid.UUID) (int64, error) {
-	res := am.db.Delete(&Article{}, id)
+	res := am.db.Table("articles").Delete(&Article{}, id)
 
 	return res.RowsAffected, res.Error
 }

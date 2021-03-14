@@ -1,15 +1,33 @@
 package main
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
+	"net/http"
 
 	"github.com/End-S/spooky_kingdom/db"
+	"github.com/End-S/spooky_kingdom/db/migration"
 	"github.com/End-S/spooky_kingdom/handler"
 	"github.com/End-S/spooky_kingdom/router"
+	"github.com/labstack/echo/v4"
 )
 
+//go:embed ui/dist
+var embeddedFiles embed.FS
+
 func main() {
-	fmt.Println("SPOOKY KINGDOM")
+	var banner = ` 
+ ____                    _            _  ___                 _                 
+/ ___| _ __   ___   ___ | | ___   _  | |/ (_)_ __   __ _  __| | ___  _ __ ___  
+\___ \| '_ \ / _ \ / _ \| |/ / | | | | ' /| | '_ \ / _  |/ _  |/ _ \|  _   _ \ 
+ ___) | |_) | (_) | (_) |   <| |_| | | . \| | | | | (_| | (_| | (_) | | | | | |
+|____/| .__/ \___/ \___/|_|\_\\__, | |_|\_\_|_| |_|\__, |\__,_|\___/|_| |_| |_|
+      |_|                     |___/                |___/                       
+`
+	fmt.Println(banner)
+
+	migration.MigrateUp()
 
 	r := router.NewRouter()
 
@@ -21,12 +39,17 @@ func main() {
 
 	router.Register(api, h)
 
-	r.Logger.Fatal(r.Start("127.0.0.1:8585"))
+	// serve static files
+	r.GET("/*", echo.WrapHandler(clientHandler()))
 
-	// as := models.NewArticleStore(d)
+	r.Logger.Fatal(r.Start("localhost:8585"))
+}
 
-	// e.GET("/", func(c echo.Context) error {
-	// return c.String(http.StatusOK, "Hello, World!")
-	// })
-	// e.Logger.Fatal(e.Start(":1323"))
+func clientHandler() http.Handler {
+	staticClient, err := fs.Sub(embeddedFiles, "ui/dist")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("🫖 Serving embedded static files")
+	return http.FileServer(http.FS(staticClient))
 }
