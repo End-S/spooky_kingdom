@@ -1,144 +1,176 @@
 <template>
-  <section class="container px-2 grid-container">
+  <section class="container grid-container">
     <section class="grid-header">
-      <div class="field field-body">
-        <b-field label="From">
-          <b-datepicker
-            v-model="articleFilters.date.from"
-            ref="fromDate"
-            expanded
-            placeholder="From date"
-          >
-          </b-datepicker>
-          <b-button
-            @click="$refs.fromDate.toggle()"
-            icon-left="calendar-today"
-            type="is-primary"
-          />
-        </b-field>
-        <b-field label="To">
-          <b-datepicker
-            v-model="articleFilters.date.to"
-            ref="toDate"
-            expanded
-            placeholder="To date"
-          >
-          </b-datepicker>
-          <b-button
-            @click="$refs.toDate.toggle()"
-            icon-left="calendar-today"
-            type="is-primary"
-          />
-        </b-field>
-      </div>
-      <b-field>
-        <b-radio
-          v-for="option in ordering"
-          v-model="articleFilters.order"
-          :key="option"
-          name="ordering"
-          :native-value="option"
-        >
-          {{ option | caps }}
-        </b-radio>
-      </b-field>
-      <b-field>
-        <b-radio
-          v-for="option in sorting"
-          v-model="articleFilters.sortBy"
-          :key="option"
-          name="sorting"
-          :native-value="option"
-        >
-          {{ option | caps }}
-        </b-radio>
-      </b-field>
-      <b-field>
-        <b-radio-button
-          v-for="option in subjects"
-          v-model="articleFilters.subject"
-          :key="option.value"
-          name="subjects"
-          :native-value="option.value"
-        >
-          {{ option.title }}
-        </b-radio-button>
-      </b-field>
+
       <b-collapse
-        class="card mb-4"
-        animation="slide"
-        aria-id="publisherFilter"
-        :open="false"
+        aria-id="articleFilters"
+        class="panel"
+        animation="fade"
+        v-model="panelOpen"
       >
-        <template #trigger="card">
+        <template #trigger="filters">
           <div
-            class="card-header"
+            class="panel-heading has-background-dark1"
             role="button"
-            aria-controls="publisherFilter"
+            aria-controls="articleFilters"
           >
-            <p class="card-header-title has-text-weight-medium">
-              Filter by publisher...
-            </p>
-            <a class="card-header-icon">
-              <b-icon :icon="card.open ? 'menu-down' : 'menu-up'"></b-icon>
+            <strong class="has-text-white">Filter criteria...</strong>
+            <a class="panel-icon panel-icon-right has-text-white">
+              <b-icon :icon="filters.open ? 'minus-box' : 'plus-box'"></b-icon>
             </a>
           </div>
         </template>
-
-        <div class="card-content">
-          <div class="content">
-            <b-checkbox
-              v-for="option in publishers"
-              v-model="articleFilters.publishers"
-              :key="option.id"
-              :native-value="option.id"
-            >
-              {{ option.label }}
-            </b-checkbox>
+        <section class="filter-form has-background-dark2">
+          <div class="field field-body">
+            <b-field>
+              <b-datepicker
+                placeholder="Date range..."
+                ref="dRange"
+                v-model="articleFilters.dRange"
+                :max-date="new Date()"
+                :min-date="new Date(1990, 0)"
+                type="month"
+                :years-range=[-100,100]
+                :mobile-native="false"
+                range>
+              </b-datepicker>
+              <b-button
+                @click="$refs.dRange.toggle()"
+                icon-left="calendar-today"
+                type="is-primary"
+              />
+            </b-field>
           </div>
-        </div>
+          <b-field>
+            <b-radio
+              v-for="option in ordering"
+              v-model="articleFilters.order"
+              :key="option"
+              name="ordering"
+              :native-value="option"
+            >
+              {{ option | caps }}
+            </b-radio>
+          </b-field>
+          <b-field>
+            <b-radio
+              v-for="option in sorting"
+              v-model="articleFilters.sortBy"
+              :key="option"
+              name="sorting"
+              :native-value="option"
+            >
+              {{ option | caps }}
+            </b-radio>
+          </b-field>
+          <b-field>
+            <b-radio-button
+              v-for="option in subjects"
+              v-model="articleFilters.subject"
+              :key="option.value"
+              name="subjects"
+              :native-value="option.value"
+            >
+              {{ option.title }}
+            </b-radio-button>
+          </b-field>
+          <b-field class="has-text-left">
+            <b-dropdown
+              v-model="articleFilters.publishers"
+              multiple
+              aria-role="list">
+              <template #trigger>
+                <b-button
+                  type="is-primary"
+                  icon-right="menu-down">
+                  Filter by publisher ({{ articleFilters.publishers.length }})
+                </b-button>
+              </template>
+              <b-dropdown-item
+                v-for="option in publishers"
+                :key="option.id"
+                :value="option.id"
+                aria-role="listitem">
+                <span>{{ option.label }}</span>
+              </b-dropdown-item>
+            </b-dropdown>
+          </b-field>
+          <div class="buttons">
+            <b-button type="is-primary is-light is-pulled-left" @click="submit"
+            >Submit
+            </b-button
+            >
+            <b-button type="is-danger is-light is-pulled-left" @click="reset">Reset</b-button>
+          </div>
+        </section>
       </b-collapse>
-      <div class="buttons">
-        <b-button type="is-primary is-light is-pulled-left" @click="submit"
-        >Submit
-        </b-button
+      <section class="article-paginator has-background-dark2">
+        <b-field class="page-options">
+          <b-radio
+            v-for="option in perPageOptions"
+            v-model="pageSize"
+            :key="option"
+            name="perPageOptionsTop"
+            :native-value="option"
+          >
+            {{ option.toString() }}
+          </b-radio>
+        </b-field>
+        <b-pagination
+          :total="totalResults"
+          v-model="currentPage"
+          :range-before="2"
+          :range-after="2"
+          :per-page="pageSize"
+          :icon-prev="'chevron-left'"
+          :icon-next="'chevron-right'"
+          aria-next-label="Next page"
+          aria-previous-label="Previous page"
+          aria-page-label="Page"
+          aria-current-label="Current page"
+          class="pagination-controls is-small"
         >
-        <b-button type="is-warning is-light is-pulled-left">Reset</b-button>
-      </div>
+        </b-pagination>
+      </section>
     </section>
+
     <section class="grid-content">
       <article-card
         v-for="article in articleList"
         v-bind:article="article"
+        v-bind:publishers="publishers"
         v-bind:key="article.id"
       ></article-card>
     </section>
-    <footer class="footer">
-      <b-pagination
-        :total="totalResults"
-        v-model="currentPage"
-        :range-before="2"
-        :range-after="2"
-        :per-page="pageSize"
-        :icon-prev="'chevron-left'"
-        :icon-next="'chevron-right'"
-        aria-next-label="Next page"
-        aria-previous-label="Previous page"
-        aria-page-label="Page"
-        aria-current-label="Current page"
-      >
-      </b-pagination>
-      <b-field>
-        <b-radio
-          v-for="option in perPageOptions"
-          v-model="pageSize"
-          :key="option"
-          name="perPageOptions"
-          :native-value="option"
+    <footer>
+      <section class="article-paginator has-background-dark2">
+        <b-field class="page-options">
+          <b-radio
+            v-for="option in perPageOptions"
+            v-model="pageSize"
+            :key="option"
+            name="perPageOptions"
+            :native-value="option"
+          >
+            {{ option.toString() }}
+          </b-radio>
+        </b-field>
+        <b-pagination
+          :total="totalResults"
+          v-model="currentPage"
+          :range-before="2"
+          :range-after="2"
+          :per-page="pageSize"
+          :icon-prev="'chevron-left'"
+          :icon-next="'chevron-right'"
+          aria-next-label="Next page"
+          aria-previous-label="Previous page"
+          aria-page-label="Page"
+          aria-current-label="Current page"
+          class="pagination-controls is-small"
         >
-          {{ option.toString() }}
-        </b-radio>
-      </b-field>
+        </b-pagination>
+      </section>
     </footer>
   </section>
 </template>
@@ -151,25 +183,61 @@
   'content'
   'footer';
   display: grid;
-  height: 100vh;
+  height: 100%;
 }
 
 .grid-header {
-  padding-top: 1rem;
   grid-area: header;
+}
+
+// override buefy margin
+.panel:not(:last-child) {
+  margin-bottom: 0;
+}
+
+.panel-heading {
+  border-radius: 0;
+}
+
+#articleFilters {
+  width: 100%;
+  position: absolute;
+  background: white none repeat scroll 0% 0%;
+  z-index: 100;
+  box-shadow: rgba(10, 10, 10, 0.1) 0px 0.5em 1em -0.125em, rgba(10, 10, 10, 0.02) 0px 0px 0px 1px;
 }
 
 .grid-content {
   grid-area: content;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.article-paginator {
+  height: auto;
+  padding: 0.3rem 0.5rem;
+  display: flex;
+
+  .page-options {
+    margin: auto 2.5rem auto auto;
+  }
+
+  .pagination-controls {
+    flex-grow: 1;
+  }
 }
 
 footer {
   grid-area: footer;
 }
 
-.footer {
-  padding: 1.5rem 3rem;
+.panel-icon-right {
+  position: absolute;
+  right: 1rem;
+}
+
+.filter-form {
+  padding: 1rem;
 }
 </style>
 
@@ -178,59 +246,56 @@ import {
   Component,
   Vue,
 } from 'vue-property-decorator';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import {
   ArticleFilters,
   ArticleSortBy,
   Ordering,
-  Subjects,
+  SubjectSelection,
 } from '@/common/models/article.model';
-import {
-  capitalize,
-  cloneDeep,
-  upperCase,
-} from 'lodash-es';
-import { Publisher } from '@/common/models/publisher.model';
-import publishers from '@/api/publishers';
+import { cloneDeep } from 'lodash-es';
 import ArticleCard from '@/components/ArticleCard.vue';
+import dayjs from 'dayjs';
+import { filterSubjects } from '@/common/utils';
+import { Publisher } from '@/common/models/publisher.model';
 
 @Component({
   components: {
     ArticleCard,
-    HelloWorld,
   },
   computed: {
     articleList() {
-      return this.$store.state.articleList;
+      return this.$store.state.as.articleList;
     },
     currentPage: {
       get() {
-        return this.$store.state.currentPage;
+        return this.$store.state.as.currentPage;
       },
       set(currentPage) {
         this.$store.commit('setCurrentPage', currentPage);
-        this.$store.dispatch('getArticles', this.$store);
+        this.$store.dispatch('getArticles');
       },
     },
     pageSize: {
       get() {
-        return this.$store.state.pageSize;
+        return this.$store.state.as.pageSize;
       },
       set(pageSize) {
         this.$store.commit('setPageSize', pageSize);
-        this.$store.dispatch('getArticles', this.$store);
+        this.$store.dispatch('getArticles');
       },
     },
     totalResults() {
-      return this.$store.state.totalResults;
+      return this.$store.state.as.totalResults;
     },
-  },
-  filters: {
-    caps: (s: string): string => capitalize(s),
+    publishers(): Publisher[] {
+      return this.$store.state.ps.publishers;
+    },
   },
 })
 export default class Home extends Vue {
-  articleFilters: ArticleFilters = cloneDeep(this.$store.state.articleFilters);
+  dayjs = dayjs;
+  panelOpen = false;
+  articleFilters: ArticleFilters = cloneDeep(this.$store.state.as.articleFilters);
 
   ordering: string[] = [ Ordering.ASCENDING, Ordering.DESCENDING ];
   sorting: string[] = [
@@ -238,67 +303,26 @@ export default class Home extends Vue {
     ArticleSortBy.DESCRIPTION,
     ArticleSortBy.TITLE,
   ];
-  subjects: { title: string; value: Subjects | '' }[] = [
-    { title: 'All', value: Subjects.ALL },
-    { title: `👻 ${ capitalize(Subjects.GHOST) }`, value: Subjects.GHOST },
-    { title: `🛸 ${ upperCase(Subjects.UFO) }`, value: Subjects.UFO },
-    { title: `🐾 ${ capitalize(Subjects.WEIRD) }`, value: Subjects.WEIRD },
-  ];
+  subjects: SubjectSelection[] = filterSubjects;
   perPageOptions: number[] = [ 10, 25, 50 ];
-  publishers: Publisher[] = [];
 
   constructor() {
     super();
-    publishers.get(
-      (res) => this.publishers.push(...res.data.publishers),
-      (err) => this.$store.commit('error', err),
-    );
+    this.$store.dispatch('getPublishers', this.$store);
     this.$store.dispatch('getArticles', this.$store);
   }
 
   submit(): void {
+    this.panelOpen = false;
     this.$store.commit('setFilters', cloneDeep(this.articleFilters));
     this.$store.commit('setCurrentPage', 1);
     this.$store.dispatch('getArticles', this.$store);
   }
+
+  reset(): void {
+    this.$store.commit('resetFilters');
+    // set filters to the new state
+    this.articleFilters = cloneDeep(this.$store.state.as.articleFilters);
+  }
 }
 </script>
-
-<!--this.publishers.push(...[-->
-<!--{-->
-<!--id: '3d438cb2-cd05-48f0-8b29-cbcac1ebf97a',-->
-<!--name: 'plymouthlive',-->
-<!--label: 'Plymouth Herald',-->
-<!--latlng: [-->
-<!--0,-->
-<!--0,-->
-<!--],-->
-<!--},-->
-<!--{-->
-<!--id: '6a1f756f-73b0-445b-b9b0-067de37438cc',-->
-<!--name: 'manchestereveningnews',-->
-<!--label: 'Manchester Evening News',-->
-<!--latlng: [-->
-<!--0,-->
-<!--0,-->
-<!--],-->
-<!--},-->
-<!--{-->
-<!--id: '8da7d038-7633-4986-af2f-000731fe9eb9',-->
-<!--name: 'yorkshireeveningpost',-->
-<!--label: 'Yorkshire Evening Post',-->
-<!--latlng: [-->
-<!--0,-->
-<!--0,-->
-<!--],-->
-<!--},-->
-<!--{-->
-<!--id: 'd9783f7a-2cca-4faf-ac8c-47fd5177489b',-->
-<!--name: 'liverpoolecho',-->
-<!--label: 'Liverpool Echo',-->
-<!--latlng: [-->
-<!--53.408371,-->
-<!-- -2.991573,-->
-<!--],-->
-<!--},-->
-<!--]);-->

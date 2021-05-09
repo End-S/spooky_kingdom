@@ -34,7 +34,7 @@ func ValidationError(vErr error, i interface{}) *ErrorResponse {
 		if found {
 			msg += tagHelp + ". "
 		} else {
-			msg += err.Field() + " " + err.ActualTag() + " " + err.Param() + ". "
+			msg += err.Field() + " " + err.ActualTag() + " " + err.Param()
 		}
 
 	}

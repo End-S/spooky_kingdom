@@ -10,6 +10,13 @@ export interface ArticleGetParams {
   pnd?: boolean;
 }
 
+export interface ArticleUpdateBody {
+  id: string;
+  description: string;
+  subject: Subjects;
+  accepted: boolean;
+}
+
 export interface Pagination {
   currentPage: number;
   pageSize: 10 | 25 | 50;
@@ -20,10 +27,8 @@ export interface ArticleFilters {
   order: Ordering;
   subject: Subjects;
   publishers: string[];
-  date: {
-    from?: Date;
-    to?: Date;
-  };
+  dRange: [ Date, Date ] | [];
+  pending?: boolean;
 }
 
 export interface Article {
@@ -46,6 +51,11 @@ export enum Subjects {
   GHOST = 'ghost',
   UFO = 'ufo',
   WEIRD = 'weird',
+}
+
+export interface SubjectSelection {
+  title: string;
+  value: Subjects | '';
 }
 
 export enum ArticleSortBy {

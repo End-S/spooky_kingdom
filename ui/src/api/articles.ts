@@ -1,13 +1,10 @@
 import { AxiosResponse } from 'axios';
-import {
-  apiCallback,
-  apiErrorCallback,
-} from '@/common/models/api.model';
 import { HTTP } from '@/common/http';
 import {
   Article,
   ArticleFilters,
   ArticleGetParams,
+  ArticleUpdateBody,
   Pagination,
 } from '@/common/models/article.model';
 import { pickBy } from 'lodash-es';
@@ -18,32 +15,52 @@ function calculateOffSet(currentPage: number, pageSize: number): number {
   return (currentPage - 1) * pageSize;
 }
 
+type GetResponse = Promise<AxiosResponse<{ articles: Article[]; total: number }>>;
 export const get = (af: ArticleFilters,
-                    pag: Pagination,
-                    cb: apiCallback<{ articles: Article[]; total: number }>,
-                    errCb: apiErrorCallback) => {
+                    pag: Pagination): GetResponse => {
   const params: ArticleGetParams = {
     pbs: af.publishers.length ? af.publishers : undefined,
-    frm: af.date?.from ? dayjs(af.date.from).unix() : undefined,
-    to: af.date?.to ? dayjs(af.date.to).unix() : undefined,
+    frm: af.dRange[ 0 ] ? dayjs(af.dRange[ 0 ]).unix() : undefined,
+    to: af.dRange[ 1 ] ? dayjs(af.dRange[ 1 ]).unix() : undefined,
     ord: af.order,
     srt: af.sortBy,
     sbj: af.subject || undefined,
     oft: calculateOffSet(pag.currentPage, pag.pageSize),
     lmt: pag.pageSize,
+    pnd: af.pending,
   };
   // remove undefined values
   const cleanParams: {} = pickBy(params, (val) => val !== undefined);
 
-  HTTP.get('articles', {
+  return HTTP.get('articles', {
     params: cleanParams,
     paramsSerializer: (paramsObj) => Qs.stringify(paramsObj, { arrayFormat: 'repeat' }),
-  })
-    .then((res: AxiosResponse<{ articles: Article[]; total: number }>) => {
-      cb(res);
-    })
-    .catch((err: string) => {
-      console.log(typeof err);
-      errCb(err);
-    });
+    headers: {
+      Authorization: `Bearer ${ localStorage.getItem('JWT') }`,
+    },
+  });
 };
+
+type UpdateResponse = Promise<AxiosResponse<{ articles: Article[] }>>
+export const update = async (a: Article): UpdateResponse => {
+  const updateBody: ArticleUpdateBody = {
+    id: a.id,
+    description: a.description,
+    subject: a.type,
+    accepted: a.accepted,
+  };
+
+  return HTTP.post('articles/update', updateBody, {
+    headers: {
+      Authorization: `Bearer ${ localStorage.getItem('JWT') }`,
+    },
+  });
+};
+
+type DeleteResponse = Promise<AxiosResponse<{ success: boolean }>>;
+export const del = async (id: string): DeleteResponse => HTTP
+  .delete(`articles/${ id }`, {
+    headers: {
+      Authorization: `Bearer ${ localStorage.getItem('JWT') }`,
+    },
+  });

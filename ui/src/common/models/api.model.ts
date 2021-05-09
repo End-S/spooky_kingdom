@@ -1,4 +1,7 @@
-import { AxiosResponse } from 'axios';
+import {
+  AxiosError,
+  AxiosResponse,
+} from 'axios';
 
 export type apiCallback<T> = (res: AxiosResponse<T>) => void;
-export type apiErrorCallback = (err: string) => void;
+export type apiErrorCallback = (err: AxiosError) => void;

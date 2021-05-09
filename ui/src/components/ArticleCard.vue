@@ -1,16 +1,18 @@
 <template>
-  <div class="card article-card">
-    <div class="card-header has-text-left">
-      <span class="card-header-title">{{ article.title }} -
-        {{ article.datePublished | time }}</span>
-      <span class="card-header-icon">{{ getSubjectEmoji(article.type) }}</span>
+  <div class="article-card">
+    <b-taglist attached class="mr-1 mb-0">
+      <span class="tag is-primary">{{ article.datePublished | time }}</span>
+      <span class="tag is-info" v-if="publishers">
+        {{ article.publisher.id | publisherLabel }}</span>
+      <span class="tag is-dark1"> {{
+          getSubjectEmoji(article.type)
+        }}</span>
+    </b-taglist>
+    <div class="has-text-left">
+      <a :href="article.link" rel="nofollow noopener" target="_blank">{{ article.title }}</a>
     </div>
-    <div class="card-content has-text-left">
-      <p><b>Description:</b> {{ article.description }}</p>
-      <p><b>Publication:</b> {{ article.publisher.name }}</p>
-    </div>
-    <div class="card-footer">
-      <a href="" class="card-footer-item">Link</a>
+    <div class="has-text-left">
+      <p>{{ article.description }}</p>
     </div>
   </div>
 </template>
@@ -21,18 +23,23 @@ import {
   Prop,
   Vue,
 } from 'vue-property-decorator';
-import { Article } from '@/common/models/article.model';
+import {
+  Article,
+  Subjects,
+} from '@/common/models/article.model';
 import { getSubjectEmoji } from '@/common/utils';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { Publisher } from '@/common/models/publisher.model';
 
-@Component({
-  filters: {
-    time: (d: string): string => dayjs(d).format('DD/MM/YYYY'),
-  },
-})
+dayjs.extend(advancedFormat);
+
+@Component({})
 export default class ArticleCard extends Vue {
   @Prop() private article!: Article;
+  @Prop() private publishers!: Publisher[];
   getSubjectEmoji = getSubjectEmoji;
+  Subjects = Subjects;
 }
 </script>
 
@@ -41,5 +48,13 @@ export default class ArticleCard extends Vue {
 .article-card {
   max-width: 60rem;
   margin: 2rem 0.5rem;
+
+  .title-content {
+    display: flex;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
 }
 </style>

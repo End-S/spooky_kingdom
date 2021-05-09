@@ -27,5 +27,7 @@ module.exports = {
     'arrow-parens': 'off',
     'lines-between-class-members': 'off',
     'class-methods-use-this': 'off',
+    'consistent-return': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };
