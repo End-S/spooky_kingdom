@@ -13,10 +13,8 @@ export default {
   }),
   mutations: {
     setJWT(state: AuthState, jwt: string) {
-      console.log('hello');
       state.jwt = jwt;
       localStorage.setItem('JWT', jwt);
-      console.log('done');
     },
   },
   actions: {
