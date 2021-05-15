@@ -23,10 +23,7 @@ import {
   Prop,
   Vue,
 } from 'vue-property-decorator';
-import {
-  Article,
-  Subjects,
-} from '@/common/models/article.model';
+import { Article } from '@/common/models/article.model';
 import { getSubjectEmoji } from '@/common/utils';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
@@ -36,10 +33,10 @@ dayjs.extend(advancedFormat);
 
 @Component({})
 export default class ArticleCard extends Vue {
+  // ! tell typescript the props will not be undefined
   @Prop() private article!: Article;
   @Prop() private publishers!: Publisher[];
   getSubjectEmoji = getSubjectEmoji;
-  Subjects = Subjects;
 }
 </script>
 

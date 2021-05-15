@@ -1,10 +1,6 @@
 <template>
   <section id="app" class="has-background-black has-text-white">
-    <!--    <section id="nav">-->
-    <!--      <router-link to="/">Home</router-link>-->
-    <!--      |-->
-    <!--      <router-link to="/about">About</router-link>-->
-    <!--    </section>-->
+    <top-nav></top-nav>
     <router-view/>
   </section>
 </template>
@@ -178,3 +174,14 @@ body {
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 </style>
+<script>
+import Vue from 'vue';
+import TopNav from '@/components/TopNav.vue';
+import { Component } from 'vue-property-decorator';
+
+@Component({
+  components: { TopNav },
+})
+export default class App extends Vue {
+}
+</script>
