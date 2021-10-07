@@ -21,7 +21,8 @@ func main() {
 
 	router.Register(api, h)
 
-	r.Logger.Fatal(r.Start("127.0.0.1:8585"))
+	// r.Logger.Fatal(r.Start("localhost:8585"))
+	r.Logger.Fatal(r.Start("192.168.1.248:8585"))
 
 	// as := models.NewArticleStore(d)
 

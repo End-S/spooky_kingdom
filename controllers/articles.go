@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/End-S/spooky_kingdom/controllers/requests"
@@ -34,7 +35,8 @@ func (ac *ArticleController) GetArticles(c echo.Context) error {
 
 	// validate request
 	if err := c.Validate(r); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ValidationError(err, requests.GetArticlesReq{}))
+		// return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusBadRequest, responses.ValidationError(err))
 	}
 
 	// if user want to retrieve articles that are pending review check they are admin
@@ -66,7 +68,7 @@ func (ac *ArticleController) UpdateArticle(c echo.Context) error {
 
 	// validate request
 	if err := c.Validate(r); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ValidationError(err, requests.UpdateArticleReq{}))
+		return c.JSON(http.StatusBadRequest, responses.ValidationError(err))
 	}
 
 	article, err := ac.articleModel.Update(r)
@@ -75,7 +77,31 @@ func (ac *ArticleController) UpdateArticle(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to update article"))
 	}
 
-	return c.JSON(http.StatusOK, responses.NewUpdateArticlesResponse(*article))
+	return c.JSON(http.StatusOK, responses.NewSingleArticleResponse(*article))
+}
+
+// StoreArticle function handles the storing of an article
+func (ac *ArticleController) StoreArticle(c echo.Context) error {
+	r := new(requests.StoreArticleReq)
+
+	// bind json to struct
+	if err := c.Bind(r); err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	// validate request
+	if err := c.Validate(r); err != nil {
+		return c.JSON(http.StatusBadRequest, responses.ValidationError(err))
+	}
+
+	article, err := ac.articleModel.Store(r)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to store article"))
+	}
+
+	return c.JSON(http.StatusOK, responses.NewSingleArticleResponse(*article))
 }
 
 // DeleteArticle function handles a delete request for an article

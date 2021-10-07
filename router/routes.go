@@ -27,6 +27,8 @@ func Register(api *echo.Group, h *handler.Handler) {
 	articles := api.Group("/articles")
 	articles.GET("", h.AC.GetArticles)
 	articles.POST("/update", h.AC.UpdateArticle, admin)
+	// TODO change admin to API Key check
+	articles.POST("/store", h.AC.StoreArticle, admin)
 	articles.DELETE("/:id", h.AC.DeleteArticle, admin)
 	// PUBLISHERS
 	publishers := api.Group("/publishers")

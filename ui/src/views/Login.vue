@@ -44,9 +44,5 @@ export default class Login extends Vue {
   login(): void {
     this.$store.dispatch('login', this.auth);
   }
-
-  // constructor() {
-  //   super();
-  // }
 }
 </script>

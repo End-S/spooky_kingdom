@@ -16,6 +16,9 @@ import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  EyeIcon,
+  EyeOffIcon,
+  FilterIcon,
   MenuIcon,
   MinusSquareIcon,
   PlusSquareIcon,
@@ -30,13 +33,27 @@ import {
     MinusSquareIcon,
     MenuIcon,
     ChevronDownIcon,
+    EyeIcon,
+    EyeOffIcon,
+    FilterIcon,
+  },
+  data() {
+    return {
+      eye: EyeIcon,
+      'eye-off': EyeOffIcon,
+    };
   },
   computed: {
-    iconName() {
-      return camelCase(this.$props.icon[ 1 ]);
+    iconName(this: any) {
+      const icon = this.$props.icon[ 1 ];
+      // not all buefy components support custom icons
+      // translate hard-coded buefy icons to our custom icons
+      if (this.$data[ icon ]) return this.$data[ icon ];
+
+      return camelCase(icon);
     },
     iconProps() {
-      return { size: this.$props.size || '2x' };
+      return { size: this.$props.size || '1x' };
     },
   },
 })
@@ -46,7 +63,6 @@ export default class SvgIcon extends Vue {
   // buefy passes customSize to this prop
   @Prop() private size!: string;
 }
-
 </script>
 
 <style lang="scss">

@@ -58,8 +58,8 @@ type UpdateArticleResponse struct {
 	Article *articleResponse `json:"article"`
 }
 
-// NewUpdateArticlesResponse creates a new UpdateArticleResponse
-func NewUpdateArticlesResponse(article models.Article) *UpdateArticleResponse {
+// NewSingleArticleResponse creates a new UpdateArticleResponse
+func NewSingleArticleResponse(article models.Article) *UpdateArticleResponse {
 	res := new(UpdateArticleResponse)
 	// res.Article = new(articleResponse)
 	res.Article = &articleResponse{

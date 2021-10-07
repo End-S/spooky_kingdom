@@ -90,6 +90,9 @@ $custom-colors: (
   ),
 );
 
+$navbar-background-color: $dark1;
+$navbar-item-color: $white;
+
 $dropdown-content-background-color: $dark1;
 $dropdown-content-shadow: $dark1-dark;
 $datepicker-item-color: $white;
@@ -142,6 +145,7 @@ html,
 body {
   height: 100%;
   overflow-y: auto !important;
+  background-color: #424242;
 }
 
 #app {
@@ -151,6 +155,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-color: #424242;
 }
 
 #nav {

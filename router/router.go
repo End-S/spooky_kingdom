@@ -15,6 +15,7 @@ func NewRouter() *echo.Echo {
 
 	origins := []string{
 		"http://localhost:8080",
+		"http://192.168.1.248:8080",
 	}
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string(origins),

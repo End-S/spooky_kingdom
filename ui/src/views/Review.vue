@@ -1,5 +1,5 @@
 <template>
-  <section class="review-wrapper" v-if="articleInReview">
+  <section class="review-wrapper mt-5" v-if="articleInReview">
     <form class="box review-form has-background-dark2">
       <p class="retrieved-header">Retrieved on the {{ articleInReview.dateRetrieved | time }}</p>
       <h1><a :href="articleInReview.link" class="title-link" rel="nofollow noopener"
@@ -38,7 +38,6 @@
 
 <style lang="scss">
 .review-wrapper {
-  height: 100%;
   display: flex;
 }
 

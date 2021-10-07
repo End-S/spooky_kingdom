@@ -1,16 +1,5 @@
 <template>
-  <section class="article-paginator has-background-dark2">
-    <b-field class="page-options">
-      <b-radio
-        v-for="option in perPageOptions"
-        v-model="pageSize"
-        :key="option"
-        :name="`perPageOptions_${key}`"
-        :native-value="option"
-      >
-        {{ option.toString() }}
-      </b-radio>
-    </b-field>
+  <section class="article-paginator has-background-dark">
     <b-pagination
       :total="totalResults"
       v-model="currentPage"
@@ -26,25 +15,25 @@
       class="pagination-controls is-small"
     >
     </b-pagination>
+    <section v-if="filtering">
+      <article-filter/>
+    </section>
   </section>
 </template>
 
 <script lang="ts">
 import {
   Component,
+  Prop,
   Vue,
 } from 'vue-property-decorator';
+import ArticleFilter from '@/components/ArticleFilter.vue';
 
 @Component({
+  components: { ArticleFilter },
   computed: {
-    pageSize: {
-      get() {
-        return this.$store.state.as.pageSize;
-      },
-      set(pageSize) {
-        this.$store.commit('setPageSize', pageSize);
-        this.$store.dispatch('getArticles');
-      },
+    pageSize() {
+      return this.$store.state.as.pageSize;
     },
     currentPage: {
       get() {
@@ -58,13 +47,16 @@ import {
     totalResults() {
       return this.$store.state.as.totalResults;
     },
+    filtering() {
+      return this.$props.showFiltering === 'true';
+    },
     key() {
       return this.$vnode.key;
     },
   },
 })
 export default class ArticlePaginator extends Vue {
-  private perPageOptions: number[] = [ 10, 25, 50 ];
+  @Prop() private showFiltering!: boolean;
 }
 </script>
 
@@ -74,22 +66,16 @@ export default class ArticlePaginator extends Vue {
   height: auto;
   padding: 0.3rem 0.5rem;
   display: flex;
-  flex-flow: column-reverse;
+  flex-flow: row;
 
   @media screen and (min-width: 768px) {
     flex-flow: row;
   }
 
-  .page-options {
-    margin: 1rem auto;
-
-    @media screen and (min-width: 768px) {
-      margin: auto 2.5rem auto auto;
-    }
-  }
-
   .pagination-controls {
     flex-grow: 1;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
   }
 }
 </style>

@@ -1,9 +1,17 @@
 <template>
   <section>
-    <b-navbar class="has-background-dark2">
+    <b-navbar :centered=false type="is-dark2">
+      <template #brand>
+        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <img
+            src="../assets/logo2.png"
+            alt="Lightweight UI components for Vue.js based on Bulma"
+          >
+        </b-navbar-item>
+      </template>
       <template #start>
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          Home
+          Archive
         </b-navbar-item>
         <b-navbar-item tag="router-link" :to="{ path: '/about' }">
           About
@@ -14,6 +22,9 @@
 </template>
 
 <style lang="scss">
+.navbar-menu {
+  //background-color: #616161;
+}
 </style>
 
 <script lang="ts">

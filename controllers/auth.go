@@ -31,7 +31,7 @@ func (ac *AuthController) Login(c echo.Context) error {
 	}
 
 	if err := c.Validate(r); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ValidationError(err, requests.LoginReq{}))
+		return c.JSON(http.StatusBadRequest, responses.ValidationError(err))
 	}
 
 	jwt, err := ac.authModel.Login(r)

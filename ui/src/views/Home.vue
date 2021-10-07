@@ -1,8 +1,7 @@
 <template>
   <section class="container grid-container">
     <section class="grid-header">
-      <article-filter :publishers="publishers"></article-filter>
-      <article-paginator key="topPaginator"></article-paginator>
+      <article-paginator key="topPaginator" showFiltering="true"></article-paginator>
     </section>
     <section class="grid-content">
       <article-card
@@ -48,6 +47,7 @@ footer {
 <script lang="ts">
 import {
   Component,
+  Provide,
   Vue,
 } from 'vue-property-decorator';
 import ArticleCard from '@/components/ArticleCard.vue';
@@ -65,12 +65,10 @@ import ArticlePaginator from '@/components/ArticlePaginator.vue';
     articleList() {
       return this.$store.state.as.articleList;
     },
-    publishers(): Publisher[] {
-      return this.$store.state.ps.publishers;
-    },
   },
 })
 export default class Home extends Vue {
+  @Provide('publishers') private publishers: Publisher[] = this.$store.state.ps.publishers;
   constructor() {
     super();
     this.$store.dispatch('getPublishers', this.$store);

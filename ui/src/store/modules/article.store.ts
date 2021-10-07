@@ -41,6 +41,9 @@ export default {
     setPageSize(state: ArticleState, pageSize: 10 | 25 | 50) {
       state.pageSize = pageSize;
     },
+    resetPageSize(state: ArticleState) {
+      state.pageSize = 10;
+    },
     setTotalResults(state: ArticleState, total: number) {
       state.totalResults = total;
     },
