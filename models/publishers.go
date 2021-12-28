@@ -1,6 +1,9 @@
 package models
 
 import (
+	"errors"
+
+	"github.com/End-S/spooky_kingdom/controllers/requests"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -23,8 +26,6 @@ type Publisher struct {
 	PublisherID uuid.UUID
 	Name        string
 	Label       string
-	Lat         float64
-	Lng         float64
 }
 
 // List function returns a list of all publishers
@@ -38,4 +39,22 @@ func (pm *PublisherModel) List() ([]Publisher, error) {
 	}
 
 	return publishers, nil
+}
+
+func (pm *PublisherModel) Create(req *requests.CreatePublisherReq) (*Publisher, error) {
+	var pub Publisher
+
+	uuid := uuid.New()
+	pm.db.Table("publishers").Create(Publisher{
+		PublisherID: uuid,
+		Name:        req.Name,
+		Label:       req.Label,
+	})
+	pm.db.Table("publishers").First(&pub, "publisher_id = ?", uuid)
+
+	if pub.Name == "" {
+		return nil, errors.New("Could not create publisher")
+	}
+
+	return &pub, nil
 }

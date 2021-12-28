@@ -15,13 +15,12 @@ import (
 // ArticleModel struct
 type ArticleModel struct {
 	db *gorm.DB
+	pm *PublisherModel
 }
 
 // NewArticleModel creates a new article model instance
-func NewArticleModel(db *gorm.DB) *ArticleModel {
-	return &ArticleModel{
-		db: db,
-	}
+func NewArticleModel(db *gorm.DB, pm *PublisherModel) *ArticleModel {
+	return &ArticleModel{db, pm}
 }
 
 // Article struct
@@ -40,7 +39,7 @@ type Article struct {
 }
 
 // List function returns a list of articles fitting the request
-func (am ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) ([]Article, int64, error) {
+func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) ([]Article, int64, error) {
 	var (
 		articles []Article
 		count    int64
@@ -83,7 +82,7 @@ func (am ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) ([
 }
 
 // Update updates an article and returns the updated article
-func (am ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) {
+func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) {
 	var article Article
 
 	res := am.db.Table("articles").Where("article_id = ?", req.ID).
@@ -98,8 +97,8 @@ func (am ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) 
 	return &article, res.Error
 }
 
-// Store stoes an article and returns the stored article
-func (am ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
+// Store stores an article and returns the stored article
+func (am *ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
 	var article Article
 	var pub Publisher
 
@@ -107,13 +106,14 @@ func (am ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
 
 	if pub.Name == "" {
 		// publisher not found create one
-		uuid := uuid.New()
-		am.db.Table("publishers").Create(Publisher{
-			PublisherID: uuid,
-			Name:        req.PublisherName,
-			Label:       strings.Title(strings.ToLower(req.PublisherName)),
+		newPub, err := am.pm.Create(&requests.CreatePublisherReq{
+			Name:  req.PublisherName,
+			Label: strings.Title(strings.ToLower(req.PublisherName)),
 		})
-		am.db.Table("publishers").First(&pub, "publisher_id = ?", uuid)
+		if err != nil {
+			return nil, err
+		}
+		pub = *newPub
 	}
 
 	uuid := uuid.New()
@@ -140,7 +140,7 @@ func (am ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
 }
 
 // Delete removes the article from the database
-func (am ArticleModel) Delete(id uuid.UUID) (int64, error) {
+func (am *ArticleModel) Delete(id uuid.UUID) (int64, error) {
 	res := am.db.Table("articles").Delete(&Article{}, id)
 
 	return res.RowsAffected, res.Error

@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/End-S/spooky_kingdom/controllers/requests"
 	"github.com/End-S/spooky_kingdom/controllers/responses"
 	"github.com/End-S/spooky_kingdom/models"
 	"github.com/labstack/echo/v4"
@@ -21,11 +22,11 @@ func NewPublisherController(pm *models.PublisherModel) *PublisherController {
 }
 
 // GetPublishers function handles a request for publishers
-func (ac *PublisherController) GetPublishers(c echo.Context) error {
-	publishers, err := ac.publisherModel.List()
+func (pc *PublisherController) GetPublishers(c echo.Context) error {
+	publishers, err := pc.publisherModel.List()
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to retrieve publishers"))
+		return echo.NewHTTPError(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to retrieve publishers"))
 	}
 
 	return c.JSON(http.StatusOK, responses.NewListPublishersResponse(publishers))
@@ -33,6 +34,28 @@ func (ac *PublisherController) GetPublishers(c echo.Context) error {
 
 // GET all publisers
 
-// ADMIN POST create new publiser
+// ADMIN POST create new publisher
+func (pc *PublisherController) CreatePublisher(c echo.Context) error {
+	r := new(requests.CreatePublisherReq)
+
+	// bind query params to struct
+	if err := c.Bind(r); err != nil {
+		return err
+	}
+
+	// validate request
+	if err := c.Validate(r); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, responses.ValidationError(err))
+	}
+
+	publisher, err := pc.publisherModel.Create(r)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to create Publisher"))
+	}
+
+	return c.JSON(http.StatusOK, responses.NewPublisherResponse(*publisher))
+
+}
 
 // ADMIN POST publishers update

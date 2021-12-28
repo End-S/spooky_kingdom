@@ -10,8 +10,18 @@ import SvgIcon from './assets/SvgIcon.vue';
 
 Vue.config.productionTip = false;
 Vue.use(Buefy, {
-  defaultIconPack: null,
+  defaultIconPack: 'svg',
   defaultIconComponent: SvgIcon,
+  customIconPacks: {
+    svg: {
+      sizes: {
+        default: '1x',
+        'is-small': '1x',
+        'is-medium': '2x',
+        'is-large': '3x',
+      },
+    },
+  },
 });
 Vue.filter('time', (d: string) => dayjs(d).format('Do MMM YYYY'));
 Vue.filter('caps', (s: string) => capitalize(s));

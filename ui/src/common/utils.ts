@@ -1,11 +1,11 @@
 import {
-  Subjects,
-  SubjectSelection,
-} from '@/common/models/article.model';
-import {
   capitalize,
   upperCase,
 } from 'lodash-es';
+import {
+  Subjects,
+  SubjectSelection,
+} from '@/common/models/article.model';
 
 export function getSubjectEmoji(subject: Subjects): string {
   const subjectEmojis: { [ key: string ]: string } = {

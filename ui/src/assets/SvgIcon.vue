@@ -22,6 +22,7 @@ import {
   MenuIcon,
   MinusSquareIcon,
   PlusSquareIcon,
+  InfoIcon,
 } from 'vue-feather-icons';
 
 @Component({
@@ -36,11 +37,13 @@ import {
     EyeIcon,
     EyeOffIcon,
     FilterIcon,
+    InfoIcon,
   },
   data() {
     return {
       eye: EyeIcon,
       'eye-off': EyeOffIcon,
+      information: InfoIcon,
     };
   },
   computed: {

@@ -1,38 +1,65 @@
 <template>
-  <section class="review-wrapper mt-5" v-if="articleInReview">
-    <form class="box review-form has-background-dark2">
-      <p class="retrieved-header">Retrieved on the {{ articleInReview.dateRetrieved | time }}</p>
-      <h1><a :href="articleInReview.link" class="title-link" rel="nofollow noopener"
-             target="_blank">{{ articleInReview.title }}</a></h1>
-      <b-taglist attached class="mr-1 mb-0">
-        <span class="tag is-dark">{{ articleInReview.publisher.id | publisherLabel }}</span>
-        <span class="tag is-primary">{{ articleInReview.datePublished | time }}</span>
-      </b-taglist>
-      <b-field label="Description">
-        <b-input id="description" type="textarea" maxlength="500"
-                 :value="articleInReview.description"
-                 @input.native="updateLocalArticle($event);">
-        </b-input>
-      </b-field>
+  <section>
+    <section class="review-wrapper mt-5" v-if="articleInReview">
+      <form class="box review-form has-background-dark2">
+        <p class="retrieved-header">
+          Retrieved on the {{ articleInReview.dateRetrieved | time }}
+        </p>
+        <h1>
+          <a
+            :href="articleInReview.link"
+            class="title-link"
+            rel="nofollow noopener"
+            target="_blank"
+            >{{ articleInReview.title }}</a
+          >
+        </h1>
+        <b-taglist attached class="mr-1 mb-0">
+          <span class="tag is-dark">{{
+            articleInReview.publisher.id | publisherLabel
+          }}</span>
+          <span class="tag is-primary">{{
+            articleInReview.datePublished | time
+          }}</span>
+        </b-taglist>
+        <b-field label="Description">
+          <b-input
+            id="description"
+            type="textarea"
+            maxlength="500"
+            :value="articleInReview.description"
+            @input.native="updateLocalArticle($event)"
+          >
+          </b-input>
+        </b-field>
 
-      <b-field label="Subject" position="is-right">
-        <b-select placeholder="Select a subject"
-                  id="type"
-                  :value="articleInReview.type"
-                  @input.native="updateLocalArticle($event);">
-          <option
-            v-for="option in subjects"
-            :value="option.value"
-            :key="option.value">
-            {{ option.title }}
-          </option>
-        </b-select>
-      </b-field>
-      <div class="buttons">
-        <button class="button is-success" @click="approve">Approve</button>
-        <button class="button is-danger" @click="reject">Reject</button>
-      </div>
-    </form>
+        <b-field label="Subject" position="is-right">
+          <b-select
+            placeholder="Select a subject"
+            id="type"
+            :value="articleInReview.type"
+            @input.native="updateLocalArticle($event)"
+          >
+            <option
+              v-for="option in subjects"
+              :value="option.value"
+              :key="option.value"
+            >
+              {{ option.title }}
+            </option>
+          </b-select>
+        </b-field>
+        <div class="buttons">
+          <button class="button is-success" @click="approve">Approve</button>
+          <button class="button is-danger" @click="reject">Reject</button>
+        </div>
+      </form>
+    </section>
+    <section class="review-wrapper" v-if="!articleInReview">
+      <b-message class="info-message has-background-dark" type="is-info" has-icon size="is-large">
+        Nothing to review
+      </b-message>
+    </section>
   </section>
 </template>
 
@@ -41,14 +68,19 @@
   display: flex;
 }
 
+.info-message {
+  margin: auto;
+  margin-top: 10rem;
+}
+
 h1 a {
   font-size: 1.5rem;
 }
 
 .retrieved-header {
   text-align: right;
-  font-size: .8rem;
-  margin: -.8rem 0 0 0;
+  font-size: 0.8rem;
+  margin: -0.8rem 0 0 0;
 }
 
 .review-form {
@@ -56,14 +88,10 @@ h1 a {
   margin: auto;
   text-align: left;
 }
-
 </style>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
 import { SubjectSelection } from '@/common/models/article.model';
 import { availableSubjects } from '@/common/utils';
@@ -71,13 +99,12 @@ import { Publisher } from '@/common/models/publisher.model';
 
 @Component({
   computed: {
-    ...mapGetters([ 'articleInReview' ]),
+    ...mapGetters(['articleInReview']),
     publishers(): Publisher[] {
       return this.$store.state.ps.publishers;
     },
   },
 })
-
 export default class Review extends Vue {
   private localArticle = {};
   private subjects: SubjectSelection[] = availableSubjects;
@@ -95,7 +122,7 @@ export default class Review extends Vue {
 
     this.localArticle = {
       ...this.localArticle,
-      ...{ [ target.id ]: target.value },
+      ...{ [target.id]: target.value },
     };
   }
 

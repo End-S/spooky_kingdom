@@ -15,11 +15,11 @@ type Handler struct {
 
 // NewHandler creates a new Handler
 func NewHandler(db *gorm.DB) *Handler {
-	am := models.NewArticleModel(db)
 	authm := models.NewAuthModel(db)
 	pm := models.NewPublisherModel(db)
+	am := models.NewArticleModel(db, pm)
 	return &Handler{
-		AC:    controllers.NewActicleController(am),
+		AC:    controllers.NewArticleController(am),
 		AuthC: controllers.NewAuthController(authm),
 		PC:    controllers.NewPublisherController(pm),
 	}

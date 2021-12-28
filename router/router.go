@@ -9,9 +9,21 @@ import (
 // NewRouter creates a new router instance
 func NewRouter() *echo.Echo {
 	e := echo.New()
+	e.HideBanner = true
 	e.Logger.SetLevel(log.DEBUG)
 	e.Pre(middleware.RemoveTrailingSlash())
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "\u001b[32m${time_rfc3339}\u001b[0m " +
+			"\u001b[35m${method}:" +
+			"${uri}\u001b[0m " +
+			"STATUS:${status}," +
+			"ERR:${error}" +
+			"\n\u001b[32m${time_rfc3339}\u001b[0m " +
+			"HOST:${host}," +
+			"LATENCY:${latency_human}," +
+			"IP:${remote_ip}," +
+			"AGENT:${user_agent}\n",
+	}))
 
 	origins := []string{
 		"http://localhost:8080",

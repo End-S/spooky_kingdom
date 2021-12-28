@@ -34,6 +34,7 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   routes,
+  linkExactActiveClass: 'is-active',
 });
 
 router.beforeEach((to, from, next) => {

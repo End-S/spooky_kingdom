@@ -6,10 +6,9 @@ import (
 )
 
 type publisherResponse struct {
-	PublisherID uuid.UUID  `json:"id"`
-	Name        string     `json:"name"`
-	Label       string     `json:"label"`
-	LatLng      [2]float64 `json:"latlng"`
+	PublisherID uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Label       string    `json:"label"`
 }
 
 // ListPublishersResponse json response containing a list of publishers
@@ -26,8 +25,26 @@ func NewListPublishersResponse(publishers []models.Publisher) *ListPublishersRes
 		pRes.PublisherID = p.PublisherID
 		pRes.Name = p.Name
 		pRes.Label = p.Label
-		pRes.LatLng = [2]float64{p.Lat, p.Lng}
 		res.Publishers = append(res.Publishers, pRes)
 	}
+	return res
+}
+
+type PublisherResponseBody struct {
+	PublisherID   uuid.UUID `json:"id"`
+	PublisherName string    `json:"name"`
+}
+
+type PublisherResponse struct {
+	Publisher *PublisherResponseBody `json:"publisher"`
+}
+
+func NewPublisherResponse(publisher models.Publisher) *PublisherResponse {
+	res := new(PublisherResponse)
+	res.Publisher = &PublisherResponseBody{
+		PublisherID:   publisher.PublisherID,
+		PublisherName: publisher.Name,
+	}
+
 	return res
 }

@@ -1,8 +1,8 @@
-import { HTTP } from '@/common/http';
-import { Authentication } from '@/common/models/auth.model';
 import { AxiosResponse } from 'axios';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import dayjs from 'dayjs';
+import { HTTP } from '@/common/http';
+import { Authentication } from '@/common/models/auth.model';
 
 type LoginResponse = Promise<AxiosResponse<{ jwtToken: string }>>
 export const login = (auth: Authentication): LoginResponse => HTTP

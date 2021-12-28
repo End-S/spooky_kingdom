@@ -19,9 +19,9 @@ module.exports = {
     'computed-property-spacing': 'off',
     'array-bracket-spacing': 'off',
     'template-curly-spacing': 'off',
-    'indent': ['error', 2, {
-      'FunctionDeclaration': { 'parameters': 'first' },
-      'FunctionExpression': { 'parameters': 'first' }
+    indent: ['error', 2, {
+      FunctionDeclaration: { parameters: 'first' },
+      FunctionExpression: { parameters: 'first' },
     }],
     'object-curly-newline': 'off',
     'arrow-parens': 'off',

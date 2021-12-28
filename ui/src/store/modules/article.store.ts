@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { AxiosError } from 'axios';
 import {
   Article,
   ArticleFilters,
@@ -9,7 +10,6 @@ import {
   Subjects,
 } from '@/common/models/article.model';
 import { get } from '@/api/articles';
-import { AxiosError } from 'axios';
 
 Vue.use(Vuex);
 

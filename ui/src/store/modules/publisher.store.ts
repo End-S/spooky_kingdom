@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { AxiosError } from 'axios';
 import { get } from '@/api/publishers';
 import { Publisher } from '@/common/models/publisher.model';
-import { AxiosError } from 'axios';
 
 Vue.use(Vuex);
 

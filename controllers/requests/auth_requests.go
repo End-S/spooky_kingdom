@@ -4,11 +4,11 @@ import "errors"
 
 // LoginReq struct for a Login request
 type LoginReq struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func (req LoginReq) Validate() error {
+func (req *LoginReq) Validate() error {
 	if req.Username == "" {
 		return errors.New("Username is required")
 	}

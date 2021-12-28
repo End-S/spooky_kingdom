@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { AxiosError } from 'axios';
 import { login } from '@/api/auth';
 import { Authentication } from '@/common/models/auth.model';
 import router from '@/router';
-import { AxiosError } from 'axios';
 
 Vue.use(Vuex);
 

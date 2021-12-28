@@ -7,22 +7,26 @@
     trap-focus
     v-model="panelOpen"
     position="is-bottom-left"
-    :close-on-click=false
+    :close-on-click="false"
   >
     <template #trigger>
-      <b-button
-        class="is-dark2"
-        icon-right="FilterIcon"
-        type="is-primary"
-        size="is-small"
-        aria-controls="articleFilters"></b-button>
+      <b-tooltip label="Filter">
+        <b-button
+          class="is-dark2"
+          icon-right="FilterIcon"
+          type="is-primary"
+          size="is-small"
+          aria-controls="articleFilters"
+        ></b-button>
+      </b-tooltip>
     </template>
     <!-- FILTER FORM-->
     <b-dropdown-item
       aria-role="menu-item"
-      :focusable=false
+      :focusable="false"
       custom
-      has-background-dark2>
+      has-background-dark2
+    >
       <form>
         <div class="field field-body">
           <b-field>
@@ -34,10 +38,10 @@
               :min-date="new Date(1990, 0)"
               icon-prev="chevronLeftIcon"
               icon-next="chevronRightIcon"
-              type="month"
-              :years-range=[-100,100]
+              :years-range="[-100, 100]"
               :mobile-native="false"
-              range>
+              range
+            >
             </b-datepicker>
             <b-button
               @click="$refs.dRange.toggle()"
@@ -94,11 +98,10 @@
           <b-dropdown
             v-model="articleFilters.publishers"
             multiple
-            aria-role="list">
+            aria-role="list"
+          >
             <template #trigger>
-              <b-button
-                type="is-primary"
-                icon-right="ChevronDownIcon">
+              <b-button type="is-primary" icon-right="ChevronDownIcon">
                 Filter by publisher ({{ articleFilters.publishers.length }})
               </b-button>
             </template>
@@ -106,7 +109,8 @@
               v-for="option in publishers"
               :key="option.id"
               :value="option.id"
-              aria-role="listitem">
+              aria-role="listitem"
+            >
               <span>{{ option.label }}</span>
             </b-dropdown-item>
           </b-dropdown>
@@ -115,7 +119,9 @@
           <b-button type="is-primary is-light is-pulled-left" @click="close">
             Submit
           </b-button>
-          <b-button type="is-danger is-light is-pulled-left" @click="reset">Reset</b-button>
+          <b-button type="is-danger is-light is-pulled-left" @click="reset"
+            >Reset</b-button
+          >
         </div>
       </form>
     </b-dropdown-item>
@@ -123,35 +129,34 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Inject,
-  Vue,
-} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { clone, cloneDeep } from 'lodash-es';
 import {
   ArticleFilters,
   ArticleSortBy,
   Ordering,
   SubjectSelection,
 } from '@/common/models/article.model';
-import {
-  clone,
-  cloneDeep,
-} from 'lodash-es';
-import { Publisher } from '@/common/models/publisher.model';
 import { filterSubjects } from '@/common/utils';
+import { Publisher } from '@/common/models/publisher.model';
 
-@Component({})
+@Component({
+  computed: {
+    publishers(): Publisher[] {
+      return this.$store.state.ps.publishers;
+    },
+  },
+})
 export default class ArticleFilter extends Vue {
-  // ! tell typescript the props will not be undefined
-  @Inject('publishers') private publishers!: Publisher[];
   private panelOpen = false;
-  private articleFilters: ArticleFilters = cloneDeep(this.$store.state.as.articleFilters);
+  private articleFilters: ArticleFilters = cloneDeep(
+    this.$store.state.as.articleFilters,
+  );
   private subjects: SubjectSelection[] = filterSubjects;
-  private perPageOptions: number[] = [ 10, 25, 50 ];
+  private perPageOptions: number[] = [10, 25, 50];
   private pageSize: number = clone(this.$store.state.as.pageSize);
 
-  private ordering: string[] = [ Ordering.ASCENDING, Ordering.DESCENDING ];
+  private ordering: string[] = [Ordering.ASCENDING, Ordering.DESCENDING];
   private sorting: string[] = [
     ArticleSortBy.DATE,
     ArticleSortBy.DESCRIPTION,

@@ -31,13 +31,13 @@ func (ac *AuthController) Login(c echo.Context) error {
 	}
 
 	if err := c.Validate(r); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ValidationError(err))
+		return echo.NewHTTPError(http.StatusBadRequest, responses.ValidationError(err))
 	}
 
 	jwt, err := ac.authModel.Login(r)
 
 	if err != nil {
-		return c.JSON(http.StatusForbidden, responses.NewErrorResponse("Failed to authenticate"))
+		return echo.NewHTTPError(http.StatusForbidden, responses.NewErrorResponse("Failed to authenticate"))
 	}
 
 	return c.JSON(http.StatusOK, responses.NewLoginResponse(jwt))

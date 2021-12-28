@@ -13,24 +13,29 @@ import (
 // Register applies all routes to the provided router group
 func Register(api *echo.Group, h *handler.Handler) {
 	config := config.Get()
+	// JWT Auth
 	admin := middleware.JWTWithConfig(
 		middleware.JWTConfig{
 			SigningKey: []byte(config.JWTSecret),
 			ErrorHandlerWithContext: func(err error, c echo.Context) error {
-				return c.JSON(http.StatusForbidden, responses.NewErrorResponse("Not permitted for this resource"))
+				return echo.NewHTTPError(http.StatusForbidden, responses.NewErrorResponse("Not permitted for this resource"))
 			},
 		},
 	)
+	// API Key Auth
+	key := middleware.KeyAuth(func(key string, c echo.Context) (bool, error) {
+		return key == config.APIKey, nil
+	})
 	// AUTH
 	api.POST("/login", h.AuthC.Login)
 	// ARTICLES
 	articles := api.Group("/articles")
 	articles.GET("", h.AC.GetArticles)
 	articles.POST("/update", h.AC.UpdateArticle, admin)
-	// TODO change admin to API Key check
-	articles.POST("/store", h.AC.StoreArticle, admin)
+	articles.POST("/store", h.AC.StoreArticle, key)
 	articles.DELETE("/:id", h.AC.DeleteArticle, admin)
 	// PUBLISHERS
 	publishers := api.Group("/publishers")
 	publishers.GET("", h.PC.GetPublishers)
+	publishers.POST("/create", h.PC.CreatePublisher, key)
 }

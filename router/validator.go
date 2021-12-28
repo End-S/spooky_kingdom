@@ -4,10 +4,6 @@ import "errors"
 
 // NewValidator creates a new validator instance
 func NewValidator() *Validator {
-	// validator := validator.New()
-	// validator.RegisterValidation("multiple_of", validation.MultipleOf)
-	// validator.RegisterValidation("valid_subject", validation.ValidSubject)
-
 	return &Validator{}
 }
 
@@ -26,5 +22,4 @@ func (v *Validator) Validate(i interface{}) error {
 		return errors.New("not a valid request type")
 	}
 	return request.Validate()
-	// return v.validator.Struct(i)
 }
