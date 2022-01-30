@@ -2,12 +2,14 @@ import Vue from 'vue';
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { capitalize } from 'lodash-es';
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import SvgIcon from './assets/SvgIcon.vue';
 
+dayjs.extend(advancedFormat);
 Vue.config.productionTip = false;
 Vue.use(Buefy, {
   defaultIconPack: 'svg',

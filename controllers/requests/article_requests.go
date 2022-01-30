@@ -41,7 +41,7 @@ type StoreArticleReq struct {
 	Subject       string `json:"subject"`
 }
 
-var validSubjects = []string{"ghost", "ufo", "weird"}
+var validSubjects = []string{"ghost", "ufo", "abc"}
 var maxDescLen = 500
 var maxTitleLen = 2000
 var maxLinkLen = 2000

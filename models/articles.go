@@ -35,7 +35,12 @@ type Article struct {
 	Description   string
 	Link          string
 	ArticleType   string
-	Accepted      bool
+	ArticleState  string
+}
+
+type DateSpan struct {
+	Max time.Time
+	Min time.Time
 }
 
 // List function returns a list of articles fitting the request
@@ -45,7 +50,14 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 		count    int64
 	)
 
-	qry := am.db.Table("articles").Where("accepted = ?", !assessPending)
+	articleState := "accepted"
+
+	if assessPending {
+		// get articles that are pending review
+		articleState = "review"
+	}
+
+	qry := am.db.Table("articles").Where("article_state= ?", articleState)
 
 	if req.Subject != "" {
 		// filter by subject
@@ -85,8 +97,14 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) {
 	var article Article
 
+	articleState := "accepted"
+
+	if !req.Accepted {
+		articleState = "rejected"
+	}
+
 	res := am.db.Table("articles").Where("article_id = ?", req.ID).
-		Updates(Article{Description: req.Description, ArticleType: req.Subject, Accepted: req.Accepted})
+		Updates(Article{Description: req.Description, ArticleType: req.Subject, ArticleState: articleState})
 
 	if res.Error != nil {
 		return nil, res.Error
@@ -117,7 +135,7 @@ func (am *ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
 	}
 
 	uuid := uuid.New()
-	// store the article
+	// store the article, will fail if duplicate title is found
 	res := am.db.Table("articles").Create(Article{
 		ArticleID:     uuid,
 		PublisherID:   pub.PublisherID,
@@ -128,6 +146,7 @@ func (am *ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
 		Description:   req.Description,
 		Link:          req.Link,
 		ArticleType:   req.Subject,
+		ArticleState:  "review",
 	})
 
 	if res.Error != nil {
@@ -144,4 +163,16 @@ func (am *ArticleModel) Delete(id uuid.UUID) (int64, error) {
 	res := am.db.Table("articles").Delete(&Article{}, id)
 
 	return res.RowsAffected, res.Error
+}
+
+// DateSpan gets the max (latest) and min (oldest) article dates
+func (am *ArticleModel) DateSpan() (*DateSpan, error) {
+	var dateSpan DateSpan
+	res := am.db.Raw("SELECT max(date_published), min(date_published) FROM articles WHERE article_state = 'accepted'").Scan(&dateSpan)
+
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &dateSpan, nil
 }

@@ -117,6 +117,8 @@ $button-hover-border-color: $dark5;
 $dropdown-item-color: $white;
 $dropdown-item-hover-background-color: $dark5;
 
+$loading-background: rgba(0, 0, 0, 0);
+
 .radio:hover,
 .checkbox:hover {
   //color: $dark5 !important;
@@ -193,10 +195,24 @@ body {
 <script>
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { HTTP } from '@/common/http';
 import TopNav from '@/components/TopNav.vue';
 
 @Component({
   components: { TopNav },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  constructor() {
+    super();
+    HTTP.interceptors.request.use((config) => {
+      this.$store.commit('incrementActiveRequests');
+      return config;
+    });
+
+    HTTP.interceptors.response.use((response) => {
+      this.$store.commit('decrementActiveRequests');
+      return response;
+    });
+  }
+}
 </script>
