@@ -7,11 +7,16 @@
       ></article-paginator>
     </section>
     <section class="grid-content">
+       <b-loading :is-full-page="false" :active="activeRequests > 0"></b-loading>
       <article-card
         v-for="article in articleList"
         :article="article"
+        :isAdmin="isAdmin()"
         :key="article.id"
       ></article-card>
+      <p v-if="articleList && articleList.length === 0">
+        No articles found...
+      </p>
     </section>
     <footer>
       <article-paginator key="bottomPaginator"></article-paginator>
@@ -50,6 +55,7 @@ import ArticleCard from '@/components/ArticleCard.vue';
 import ArticleFilter from '@/components/ArticleFilter.vue';
 import ArticlePaginator from '@/components/ArticlePaginator.vue';
 import { Article } from '@/common/models/article.model';
+import { isAuthorised } from '@/api/auth';
 
 @Component({
   components: {
@@ -61,6 +67,9 @@ import { Article } from '@/common/models/article.model';
     articleList(): Article[] {
       return this.$store.state.as.articleList;
     },
+    activeRequests(): number {
+      return this.$store.state.activeRequests;
+    },
   },
 })
 export default class Home extends Vue {
@@ -68,6 +77,10 @@ export default class Home extends Vue {
     super();
     this.$store.dispatch('getPublishers', this.$store);
     this.$store.dispatch('getArticles', this.$store);
+  }
+
+  isAdmin() {
+    return isAuthorised();
   }
 }
 </script>

@@ -75,6 +75,7 @@
 
 h1 a {
   font-size: 1.5rem;
+  color: #66b8ff;
 }
 
 .retrieved-header {
@@ -93,7 +94,7 @@ h1 a {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { SubjectSelection } from '@/common/models/article.model';
+import { ArticleUpdateBody, SubjectSelection } from '@/common/models/article.model';
 import { availableSubjects } from '@/common/utils';
 import { Publisher } from '@/common/models/publisher.model';
 
@@ -106,7 +107,7 @@ import { Publisher } from '@/common/models/publisher.model';
   },
 })
 export default class Review extends Vue {
-  private localArticle = {};
+  private localArticle: Partial<ArticleUpdateBody> = {};
   private subjects: SubjectSelection[] = availableSubjects;
 
   constructor() {
@@ -128,12 +129,14 @@ export default class Review extends Vue {
 
   async approve() {
     this.localArticle = { ...this.localArticle, ...{ accepted: true } };
-    await this.$store.dispatch('approveArticleInReview', this.localArticle);
+    await this.$store.dispatch('updateArticleInReview', this.localArticle);
     this.localArticle = {};
   }
 
   async reject() {
-    await this.$store.dispatch('deleteArticleInReview');
+    this.localArticle = { ...this.localArticle, ...{ accepted: false } };
+    await this.$store.dispatch('updateArticleInReview', this.localArticle);
+    this.localArticle = {};
   }
 }
 </script>

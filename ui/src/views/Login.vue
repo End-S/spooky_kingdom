@@ -11,7 +11,7 @@
                  password-reveal>
         </b-input>
       </b-field>
-      <button class="button is-primary" @click="login">Sign in</button>
+      <button class="button is-primary" @click="login" type="button">Sign in</button>
     </form>
 
   </section>

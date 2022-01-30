@@ -7,6 +7,7 @@
     trap-focus
     v-model="panelOpen"
     position="is-bottom-left"
+    :mobile-modal="true"
     :close-on-click="false"
   >
     <template #trigger>
@@ -34,12 +35,14 @@
               placeholder="Date range..."
               ref="dRange"
               v-model="articleFilters.dRange"
-              :max-date="new Date()"
-              :min-date="new Date(1990, 0)"
+              :max-date="maxDate"
+              :min-date="minDate"
+              :focused-date="maxDate"
               icon-prev="chevronLeftIcon"
               icon-next="chevronRightIcon"
               :years-range="[-100, 100]"
               :mobile-native="false"
+              type="month"
               range
             >
             </b-datepicker>
@@ -89,6 +92,7 @@
             v-model="articleFilters.subject"
             :key="option.value"
             name="subjects"
+            :size="screenWidth >= 1600 ? '': 'is-small'"
             :native-value="option.value"
           >
             {{ option.title }}
@@ -145,6 +149,19 @@ import { Publisher } from '@/common/models/publisher.model';
     publishers(): Publisher[] {
       return this.$store.state.ps.publishers;
     },
+    maxDate(): Date {
+      const { dateSpan } = this.$store.state.as;
+      return new Date(new Date(dateSpan.max)
+        .setMonth(new Date(dateSpan.max).getMonth() + 1));
+    },
+    minDate(): Date {
+      const { dateSpan } = this.$store.state.as;
+      return new Date(new Date(dateSpan.min)
+        .setMonth(new Date(dateSpan.min).getMonth() - 1));
+    },
+  },
+  mounted() {
+    this.$store.dispatch('getDateSpan', this.$store);
   },
 })
 export default class ArticleFilter extends Vue {
@@ -163,12 +180,28 @@ export default class ArticleFilter extends Vue {
     ArticleSortBy.TITLE,
   ];
 
+  private screenWidth: number = window.innerWidth;
+
+  constructor() {
+    super();
+    window.addEventListener('resize', this.onResize);
+  }
+
+  destroyed() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  onResize(): void {
+    this.screenWidth = window.innerWidth;
+  }
+
   close(): void {
     const dropdown = this.$refs.dropdown as any;
     dropdown.toggle();
   }
 
-  submit(): void {
+  submit(dropdownOpen: boolean): void {
+    if (dropdownOpen) return; // only make changes when dropdown is closed
     this.$store.commit('setFilters', cloneDeep(this.articleFilters));
     this.$store.commit('setCurrentPage', 1);
     this.$store.commit('setPageSize', clone(this.pageSize));
@@ -188,4 +221,11 @@ export default class ArticleFilter extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+</style>
+<style lang="scss">
+.dropdown.is-mobile-modal > .dropdown-menu {
+  @media screen and (max-width: 375px) {
+    width: calc(100vw - 15px) !important;
+  }
+}
 </style>

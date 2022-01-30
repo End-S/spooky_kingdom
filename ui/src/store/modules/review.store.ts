@@ -5,6 +5,7 @@ import {
   Article,
   ArticleFilters,
   ArticleSortBy,
+  ArticleUpdateBody,
   Ordering,
   Pagination,
   Subjects,
@@ -64,10 +65,16 @@ export default {
         .catch((err: AxiosError) => commit('error', err));
       commit('setArticlesToReview', res.data.articles);
     },
-    async approveArticleInReview({ state, commit, getters, dispatch }: VuexArgs<ReviewState>,
-                                 articleUpdates: {}) {
-      const mergedUpdates = { ...getters.articleInReview, ...articleUpdates };
-      await update(mergedUpdates)
+    async updateArticleInReview({ state, commit, getters, dispatch }: VuexArgs<ReviewState>,
+                                articleUpdate: Partial<ArticleUpdateBody>) {
+      const articleInReview: Article = { ...getters.articleInReview };
+      const updateBody: ArticleUpdateBody = {
+        id: articleInReview.id,
+        description: articleUpdate.description || articleInReview.description,
+        subject: articleUpdate.subject || articleInReview.type,
+        accepted: articleUpdate.accepted || false,
+      };
+      await update(updateBody)
         .catch((err: AxiosError) => commit('error', err));
 
       commit('shiftArticlesToReview');

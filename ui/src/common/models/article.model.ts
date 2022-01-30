@@ -43,14 +43,25 @@ export interface Article {
   description: string;
   link: string;
   type: Subjects;
-  accepted: boolean;
+  state: ArticleReviewState;
+}
+
+export interface ArticleDateSpan {
+  max: string;
+  min: string;
 }
 
 export enum Subjects {
   ALL = '',
   GHOST = 'ghost',
   UFO = 'ufo',
-  WEIRD = 'weird',
+  ABC = 'abc',
+}
+
+export enum ArticleReviewState {
+  ACCEPTED = 'accepted',
+  REVIEW = 'review',
+  REJECTED = 'rejected'
 }
 
 export interface SubjectSelection {

@@ -5,7 +5,7 @@ import { HTTP } from '@/common/http';
 import { Authentication } from '@/common/models/auth.model';
 
 type LoginResponse = Promise<AxiosResponse<{ jwtToken: string }>>
-export const login = (auth: Authentication): LoginResponse => HTTP
+export const login = async (auth: Authentication): LoginResponse => HTTP
   .post('login', {
     username: auth.username,
     password: auth.password,

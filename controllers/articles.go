@@ -128,9 +128,17 @@ func (ac *ArticleController) DeleteArticle(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.NewDeleteResponse(true))
 }
 
-// ADMIN POST article changes
+// ArticleDateSpan function handles an article date span request
+func (ac *ArticleController) ArticleDateSpan(c echo.Context) error {
+	dateSpan, err := ac.articleModel.DateSpan()
 
-// ADMIN POST new article (actioned by web crawler)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError,
+			responses.NewErrorResponse("Server error, unable to get article date span"))
+	}
 
-// To impove pagination we should have indexes for fields, which we are using in ORDER BY
+	return c.JSON(http.StatusOK, responses.NewArticleDateSpanResponse(*dateSpan))
+}
+
+// To improve pagination performance we should have indexes for fields, which we are using in ORDER BY
 // index date pub, title ASC/DSC and type

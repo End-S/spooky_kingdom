@@ -16,12 +16,17 @@ type ArticleResponseBody struct {
 	Description   string                `json:"description"`
 	Link          string                `json:"link"`
 	ArticleType   string                `json:"type"`
-	Accepted      bool                  `json:"accepted"`
+	ArticleState  string                `json:"state"`
 }
 
 type ListArticlesResponse struct {
 	Articles []*ArticleResponseBody `json:"articles"`
 	Count    int64                  `json:"total"`
+}
+
+type ArticleDateSpanResponse struct {
+	MaxDate time.Time `json:"max"`
+	MinDate time.Time `json:"min"`
 }
 
 // NewListArticlesResponse creates a new ListArticlesResponse
@@ -39,7 +44,7 @@ func NewListArticlesResponse(articles []models.Article, count int64) *ListArticl
 		aRes.Description = a.Description
 		aRes.Link = a.Link
 		aRes.ArticleType = a.ArticleType
-		aRes.Accepted = a.Accepted
+		aRes.ArticleState = a.ArticleState
 		res.Articles = append(res.Articles, aRes)
 	}
 	res.Count = count
@@ -67,7 +72,16 @@ func NewArticleResponse(article models.Article) *ArticleResponse {
 		Description:   article.Description,
 		Link:          article.Link,
 		ArticleType:   article.ArticleType,
-		Accepted:      article.Accepted,
+		ArticleState:  article.ArticleState,
 	}
+	return res
+}
+
+// NewArticleDateSpanResponse creates a new ArticleDateSpanResponse
+func NewArticleDateSpanResponse(dateRange models.DateSpan) *ArticleDateSpanResponse {
+	res := new(ArticleDateSpanResponse)
+	res.MaxDate = dateRange.Max
+	res.MinDate = dateRange.Min
+
 	return res
 }

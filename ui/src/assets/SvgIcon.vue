@@ -23,6 +23,10 @@ import {
   MinusSquareIcon,
   PlusSquareIcon,
   InfoIcon,
+  EditIcon,
+  Edit2Icon,
+  Edit3Icon,
+  MailIcon,
 } from 'vue-feather-icons';
 
 @Component({
@@ -38,6 +42,10 @@ import {
     EyeOffIcon,
     FilterIcon,
     InfoIcon,
+    EditIcon,
+    Edit2Icon,
+    Edit3Icon,
+    MailIcon,
   },
   data() {
     return {

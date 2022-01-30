@@ -18,16 +18,24 @@ export default new Vuex.Store({
   },
   state: (): GlobalState => ({
     err: '',
+    activeRequests: 0,
   }),
   mutations: {
     error(state: GlobalState, err: AxiosError) {
+      console.error(err);
       let errMsg = 'Something went wrong';
       if (err.response) {
-        errMsg = `${ err.response?.data?.error } (${ err.response?.status })`;
+        errMsg = `${err.response?.data?.error} (${err.response?.status})`;
       }
       state.err = errMsg;
-      Snackbar.open(`${ errMsg }`);
+      Snackbar.open(`${errMsg}`);
       throw err;
+    },
+    incrementActiveRequests(state: GlobalState) {
+      state.activeRequests += 1;
+    },
+    decrementActiveRequests(state: GlobalState) {
+      state.activeRequests -= 1;
     },
   },
   strict: true,
@@ -35,4 +43,5 @@ export default new Vuex.Store({
 
 interface GlobalState {
   err: string;
+  activeRequests: number;
 }

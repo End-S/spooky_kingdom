@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/End-S/spooky_kingdom/config"
 	"github.com/End-S/spooky_kingdom/controllers/requests"
@@ -24,7 +23,6 @@ func NewAuthModel(db *gorm.DB) *AuthModel {
 
 // Login function returns a valid JWT
 func (am *AuthModel) Login(req *requests.LoginReq) (string, error) {
-	fmt.Println(req)
 	config := config.Get()
 
 	if req.Password != config.Admin.Password ||
