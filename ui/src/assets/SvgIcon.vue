@@ -27,6 +27,7 @@ import {
   Edit2Icon,
   Edit3Icon,
   MailIcon,
+  DeleteIcon,
 } from 'vue-feather-icons';
 
 @Component({
@@ -46,6 +47,7 @@ import {
     Edit2Icon,
     Edit3Icon,
     MailIcon,
+    DeleteIcon,
   },
   data() {
     return {

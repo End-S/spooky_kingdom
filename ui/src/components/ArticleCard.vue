@@ -24,12 +24,13 @@
         v-if="isAdmin"
         @click="editToggle"
         icon-right="Edit3Icon"
-        outlined="true"
+        :outlined="true"
         type="is-text"
         class="is-dark2 pl-1"
         size="is-small"
         aria-controls="editDescription"
-      >Edit</b-button>
+        >Edit</b-button
+      >
     </div>
     <div v-if="editMode" class="has-text-left">
       <b-input
@@ -44,7 +45,8 @@
       <b-button
         @click="cancelChanges"
         v-if="isAdmin && editMode"
-        class="is-danger"
+        class="is-dark2"
+        aria-controls="cancelChanges"
       >
         Cancel
       </b-button>
@@ -52,9 +54,18 @@
         @click="saveChanges"
         v-if="isAdmin && editMode"
         class="is-success"
+        aria-controls="saveChanges"
       >
         Save
       </b-button>
+      <b-button
+        v-if="isAdmin && editMode"
+        @click="rejectArticle"
+        icon-right="DeleteIcon"
+        class="is-danger"
+        aria-controls="rejectArticle"
+        >Reject</b-button
+      >
     </div>
   </div>
 </template>
@@ -63,7 +74,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { cloneDeep } from 'lodash-es';
 import { getSubjectEmoji } from '@/common/utils';
-import { Article } from '@/common/models/article.model';
+import { Article, ArticleReviewState } from '@/common/models/article.model';
 import { Publisher } from '@/common/models/publisher.model';
 
 @Component({
@@ -93,6 +104,12 @@ export default class ArticleCard extends Vue {
   async saveChanges() {
     await this.$store.dispatch('updateArticle', this.editableArticle);
     this.editToggle();
+  }
+
+  async rejectArticle() {
+    this.editableArticle.state = ArticleReviewState.REJECTED;
+    await this.$store.dispatch('updateArticle', this.editableArticle);
+    await this.$store.dispatch('getArticles', this.$store);
   }
 }
 </script>
