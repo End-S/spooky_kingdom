@@ -36,6 +36,7 @@ type Article struct {
 	Link          string
 	ArticleType   string
 	ArticleState  string
+	MatchedTerms  string
 }
 
 type DateSpan struct {
@@ -147,6 +148,7 @@ func (am *ArticleModel) Store(req *requests.StoreArticleReq) (*Article, error) {
 		Link:          req.Link,
 		ArticleType:   req.Subject,
 		ArticleState:  "review",
+		MatchedTerms:  strings.Join(req.MatchedTerms, ","),
 	})
 
 	if res.Error != nil {

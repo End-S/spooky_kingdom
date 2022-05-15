@@ -44,6 +44,7 @@ export interface Article {
   link: string;
   type: Subjects;
   state: ArticleReviewState;
+  matchedTerms: string[];
 }
 
 export interface ArticleDateSpan {

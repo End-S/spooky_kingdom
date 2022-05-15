@@ -1,6 +1,7 @@
 package responses
 
 import (
+	"strings"
 	"time"
 
 	"github.com/End-S/spooky_kingdom/models"
@@ -17,6 +18,7 @@ type ArticleResponseBody struct {
 	Link          string                `json:"link"`
 	ArticleType   string                `json:"type"`
 	ArticleState  string                `json:"state"`
+	MatchedTerms  []string              `json:"matchedTerms"`
 }
 
 type ListArticlesResponse struct {
@@ -45,6 +47,7 @@ func NewListArticlesResponse(articles []models.Article, count int64) *ListArticl
 		aRes.Link = a.Link
 		aRes.ArticleType = a.ArticleType
 		aRes.ArticleState = a.ArticleState
+		aRes.MatchedTerms = strings.Split(a.MatchedTerms, ",")
 		res.Articles = append(res.Articles, aRes)
 	}
 	res.Count = count
@@ -73,6 +76,7 @@ func NewArticleResponse(article models.Article) *ArticleResponse {
 		Link:          article.Link,
 		ArticleType:   article.ArticleType,
 		ArticleState:  article.ArticleState,
+		MatchedTerms:  strings.Split(article.MatchedTerms, ","),
 	}
 	return res
 }

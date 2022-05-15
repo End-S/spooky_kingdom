@@ -41,17 +41,23 @@
     </div>
     <p class="has-text-left">
       In order keep the load on the publisher's server to a minimum,
-      crawlers crawl a page once every 20 seconds and sleep for 6 months
-      before checking for new articles.
+      crawlers crawl a page once every 20 seconds before moving on to the next page.
     </p>
     <p class="has-text-left">
       Archived Publishers (if you enjoy their content please consider supporting them)
       <ul>
+      <li>
+        <a
+          href="https://www.hampshirelive.news/"
+          rel="nofollow noopener"
+          target="_blank"
+          >Hampshire Live</a>
+      </li>
        <li>
-          <a
-        href="https://www.lincolnshirelive.co.uk/"
-        rel="nofollow noopener"
-        target="_blank"
+        <a
+          href="https://www.lincolnshirelive.co.uk/"
+          rel="nofollow noopener"
+          target="_blank"
         >Lincolnshire Live</a>
        </li>
        <li>
@@ -69,18 +75,25 @@
       >Manchester Evening News</a>
       </li>
       <li>
-          <a
-        href="https://www.plymouthherald.co.uk/"
-        rel="nofollow noopener"
-        target="_blank"
+        <a
+          href="https://www.plymouthherald.co.uk/"
+          rel="nofollow noopener"
+          target="_blank"
       >Plymouth Herald</a>
       </li>
       <li>
-          <a
-        href="https://www.yorkshireeveningpost.co.uk/subscriptions"
-        rel="nofollow noopener"
-        target="_blank"
+        <a
+          href="https://www.yorkshireeveningpost.co.uk/subscriptions"
+          rel="nofollow noopener"
+          target="_blank"
       >Yorkshire Evening Post</a>
+      </li>
+      <li>
+        <a
+          href="https://www.hampshirelive.news/"
+          rel="nofollow noopener"
+          target="_blank"
+      >Hampshire Live</a>
       </li>
         </ul>
     </p>

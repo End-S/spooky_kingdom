@@ -3,6 +3,7 @@ package requests
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strconv"
 
 	"github.com/End-S/spooky_kingdom/utils"
@@ -32,13 +33,14 @@ type UpdateArticleReq struct {
 
 // StoreArticleReq struct for a StoreArticle request
 type StoreArticleReq struct {
-	PublisherName string `json:"publisherName"`
-	DatePublished int64  `json:"datePublished"`
-	DateRetrieved int64  `json:"dateRetrieved"`
-	Title         string `json:"title"`
-	Description   string `json:"description"`
-	Link          string `json:"link"`
-	Subject       string `json:"subject"`
+	PublisherName string   `json:"publisherName"`
+	DatePublished int64    `json:"datePublished"`
+	DateRetrieved int64    `json:"dateRetrieved"`
+	Title         string   `json:"title"`
+	Description   string   `json:"description"`
+	Link          string   `json:"link"`
+	Subject       string   `json:"subject"`
+	MatchedTerms  []string `json:"matchedTerms"`
 }
 
 var validSubjects = []string{"ghost", "ufo", "abc"}
@@ -139,6 +141,9 @@ func (req *StoreArticleReq) Validate() error {
 	}
 	if req.Subject != "" && validSubject(req.Subject) == false {
 		return errors.New(fmt.Sprintf("subject must be set to one of the following: %v", validSubjects))
+	}
+	if reflect.TypeOf(req.MatchedTerms).String() != "[]string" || len(req.MatchedTerms) <= 0 {
+		return errors.New("matchedTerms must be a non empty array")
 	}
 	return nil
 }
