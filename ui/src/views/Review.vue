@@ -49,6 +49,17 @@
             </option>
           </b-select>
         </b-field>
+        <b-field label="Matched Terms">
+          <b-taglist>
+            <b-tag
+              type="is-info is-light"
+              v-for="term in articleInReview.matchedTerms"
+              :key="term"
+            >
+              {{ term }}
+            </b-tag>
+          </b-taglist>
+        </b-field>
         <div class="buttons">
           <button class="button is-success" @click="approve">Approve</button>
           <button class="button is-danger" @click="reject">Reject</button>
@@ -56,7 +67,12 @@
       </form>
     </section>
     <section class="review-wrapper" v-if="!articleInReview">
-      <b-message class="info-message has-background-dark" type="is-info" has-icon size="is-large">
+      <b-message
+        class="info-message has-background-dark"
+        type="is-info"
+        has-icon
+        size="is-large"
+      >
         Nothing to review
       </b-message>
     </section>
@@ -94,7 +110,10 @@ h1 a {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
-import { ArticleUpdateBody, SubjectSelection } from '@/common/models/article.model';
+import {
+  ArticleUpdateBody,
+  SubjectSelection,
+} from '@/common/models/article.model';
 import { availableSubjects } from '@/common/utils';
 import { Publisher } from '@/common/models/publisher.model';
 

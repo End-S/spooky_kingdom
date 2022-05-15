@@ -24,6 +24,9 @@ func NewRouter() *echo.Echo {
 			"IP:${remote_ip}," +
 			"AGENT:${user_agent}\n",
 	}))
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 5,
+	}))
 
 	origins := []string{
 		"http://localhost:8080",

@@ -1,0 +1,1 @@
+ALTER TABLE articles ADD COLUMN matched_terms VARCHAR NOT NULL DEFAULT '';

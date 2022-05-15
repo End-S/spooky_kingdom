@@ -4,11 +4,11 @@ go 1.16
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang-migrate/migrate/v4 v4.15.1
 	github.com/google/uuid v1.3.0
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
+	github.com/lib/pq v1.10.5 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mitchellh/mapstructure v1.4.0 // indirect

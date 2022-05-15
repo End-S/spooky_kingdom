@@ -1,0 +1,1 @@
+ALTER TABLE articles DROP COLUMN matched_terms;
