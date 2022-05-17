@@ -53,8 +53,8 @@
           <b-taglist>
             <b-tag
               type="is-info is-light"
-              v-for="term in articleInReview.matchedTerms"
-              :key="term"
+              v-for="(term, index) in articleInReview.matchedTerms"
+              :key="`${term}-${index}`"
             >
               {{ term }}
             </b-tag>
@@ -66,7 +66,8 @@
         </div>
       </form>
     </section>
-    <section class="review-wrapper" v-if="!articleInReview">
+    <b-loading :is-full-page="false" :active="activeRequests > 0"></b-loading>
+    <section class="review-wrapper" v-if="!articleInReview && !activeRequests">
       <b-message
         class="info-message has-background-dark"
         type="is-info"
@@ -122,6 +123,9 @@ import { Publisher } from '@/common/models/publisher.model';
     ...mapGetters(['articleInReview']),
     publishers(): Publisher[] {
       return this.$store.state.ps.publishers;
+    },
+    activeRequests(): number {
+      return this.$store.state.activeRequests;
     },
   },
 })

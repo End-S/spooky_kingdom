@@ -16,17 +16,13 @@
     >
     </b-pagination>
     <section v-if="filtering">
-      <article-filter/>
+      <article-filter />
     </section>
   </section>
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue,
-} from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import ArticleFilter from '@/components/ArticleFilter.vue';
 
 @Component({
@@ -39,9 +35,11 @@ import ArticleFilter from '@/components/ArticleFilter.vue';
       get() {
         return this.$store.state.as.currentPage;
       },
-      set(currentPage) {
+      async set(currentPage) {
         this.$store.commit('setCurrentPage', currentPage);
-        this.$store.dispatch('getArticles');
+        await this.$store.dispatch('getArticles');
+        const appElement = document.querySelector('#app');
+        if (appElement) appElement.scrollTo(0, 0);
       },
     },
     totalResults() {

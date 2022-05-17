@@ -117,7 +117,7 @@ $button-hover-border-color: $dark5;
 $dropdown-item-color: $white;
 $dropdown-item-hover-background-color: $dark5;
 
-$loading-background: rgba(0, 0, 0, 0);
+$loading-background: rgba(255, 255, 255, 0.034);
 
 .radio:hover,
 .checkbox:hover {
