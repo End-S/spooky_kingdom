@@ -46,56 +46,49 @@
     <p class="has-text-left">
       Archived Publishers (if you enjoy their content please consider supporting them)
       <ul>
-      <li>
-        <a
-          href="https://www.hampshirelive.news/"
-          rel="nofollow noopener"
-          target="_blank"
-          >Hampshire Live</a>
-      </li>
-       <li>
-        <a
-          href="https://www.lincolnshirelive.co.uk/"
-          rel="nofollow noopener"
-          target="_blank"
-        >Lincolnshire Live</a>
-       </li>
-       <li>
-        <a
-          href="https://www.liverpoolecho.co.uk/"
-          rel="nofollow noopener"
-          target="_blank"
-      >Liverpool Echo</a>
-      </li>
-      <li>
-        <a
-          href="https://www.manchestereveningnews.co.uk/"
-          rel="nofollow noopener"
-          target="_blank"
-      >Manchester Evening News</a>
-      </li>
-      <li>
-        <a
-          href="https://www.plymouthherald.co.uk/"
-          rel="nofollow noopener"
-          target="_blank"
-      >Plymouth Herald</a>
-      </li>
-      <li>
-        <a
-          href="https://www.yorkshireeveningpost.co.uk/subscriptions"
-          rel="nofollow noopener"
-          target="_blank"
-      >Yorkshire Evening Post</a>
-      </li>
-      <li>
-        <a
-          href="https://www.hampshirelive.news/"
-          rel="nofollow noopener"
-          target="_blank"
-      >Hampshire Live</a>
-      </li>
-        </ul>
+        <li>
+          <a
+            href="https://www.hampshirelive.news/"
+            rel="nofollow noopener"
+            target="_blank"
+            >Hampshire Live</a>
+        </li>
+        <li>
+          <a
+            href="https://www.lincolnshirelive.co.uk/"
+            rel="nofollow noopener"
+            target="_blank"
+          >Lincolnshire Live</a>
+        </li>
+        <li>
+          <a
+            href="https://www.liverpoolecho.co.uk/"
+            rel="nofollow noopener"
+            target="_blank"
+        >Liverpool Echo</a>
+        </li>
+        <li>
+          <a
+            href="https://www.manchestereveningnews.co.uk/"
+            rel="nofollow noopener"
+            target="_blank"
+        >Manchester Evening News</a>
+        </li>
+        <li>
+          <a
+            href="https://www.plymouthherald.co.uk/"
+            rel="nofollow noopener"
+            target="_blank"
+        >Plymouth Herald</a>
+        </li>
+        <li>
+          <a
+            href="https://www.yorkshireeveningpost.co.uk/subscriptions"
+            rel="nofollow noopener"
+            target="_blank"
+        >Yorkshire Evening Post</a>
+        </li>
+      </ul>
     </p>
     <p class="has-text-left">
       <b-icon icon="MailIcon" size="is-small"></b-icon>
