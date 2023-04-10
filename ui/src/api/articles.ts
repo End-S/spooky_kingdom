@@ -1,67 +1,82 @@
-import Qs from 'qs';
-import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
-import { pickBy } from 'lodash-es';
-import { HTTP } from '@/common/http';
-import {
+import Qs from "qs";
+import { pickBy } from "lodash-es";
+import { HTTP } from "@/common/http";
+import type {
   Article,
   ArticleDateSpan,
   ArticleFilters,
   ArticleGetParams,
   ArticleUpdateBody,
   Pagination,
-} from '@/common/models/article.model';
+} from "@/common/models/article.model";
+import { DateTime } from "luxon";
+import type { ApiResponse } from "@/common/models/api.model";
+import type { AxiosRequestConfig } from "axios";
 
 function calculateOffSet(currentPage: number, pageSize: number): number {
   return (currentPage - 1) * pageSize;
 }
 
-type GetResponse = Promise<AxiosResponse<{ articles: Article[]; total: number }>>;
-export const get = (af: ArticleFilters,
-                    pag: Pagination): GetResponse => {
+export type GetArticlesRes = ApiResponse<{ articles: Article[]; total: number }>;
+export const get = (filters: ArticleFilters, pagination: Pagination): Promise<GetArticlesRes> => {
   const params: ArticleGetParams = {
-    pbs: af.publishers.length ? af.publishers : undefined,
-    frm: af.dRange[0] ? dayjs(af.dRange[0]).unix() : undefined,
-    to: af.dRange[1] ? dayjs(af.dRange[1]).unix() : undefined,
-    ord: af.order,
-    srt: af.sortBy,
-    sbj: af.subject || undefined,
-    oft: calculateOffSet(pag.currentPage, pag.pageSize),
-    lmt: pag.pageSize,
-    pnd: af.pending,
+    pbs: filters.publishers.length ? filters.publishers : undefined,
+    frm: filters.dRange[0]
+      ? Math.floor(DateTime.fromJSDate(filters.dRange[0]).toSeconds())
+      : undefined,
+    to: filters.dRange[1]
+      ? Math.floor(DateTime.fromJSDate(filters.dRange[1]).toSeconds())
+      : undefined,
+    ord: filters.order,
+    srt: filters.sortBy,
+    sbj: filters.subject || undefined,
+    oft: calculateOffSet(pagination.currentPage, pagination.pageSize),
+    lmt: pagination.pageSize,
+    pnd: filters.pending,
   };
   // remove undefined values
   const cleanParams: {} = pickBy(params, (val) => val !== undefined);
 
-  return HTTP.get('articles', {
+  const config: AxiosRequestConfig = {
     params: cleanParams,
-    paramsSerializer: (paramsObj) => Qs.stringify(paramsObj, { arrayFormat: 'repeat' }),
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
+    paramsSerializer: {
+      serialize: (paramsObj) => Qs.stringify(paramsObj, { arrayFormat: "repeat" }),
     },
-  });
+  };
+
+  // retrieving pending articles requires authorization
+  if (filters.pending) {
+    config.headers = {
+      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
+    };
+  }
+
+  return HTTP.get("articles", config);
 };
 
-type UpdateResponse = Promise<AxiosResponse<{ articles: Article[] }>>
-export const update = async (updateBody: ArticleUpdateBody): UpdateResponse => HTTP
-  .post('articles/update', updateBody, {
+export type UpdateArticleRes = ApiResponse<{ articles: Article[] }>;
+export const update = async (
+  id: string,
+  updateBody: ArticleUpdateBody
+): Promise<UpdateArticleRes> =>
+  HTTP.patch(`articles/${id}`, updateBody, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
+      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
     },
   });
 
-type DeleteResponse = Promise<AxiosResponse<{ success: boolean }>>;
-export const del = async (id: string): DeleteResponse => HTTP
-  .delete(`articles/${id}`, {
+export type DeleteArticleRes = ApiResponse<{ success: boolean }>;
+export const del = async (id: string): Promise<DeleteArticleRes> =>
+  HTTP.delete(`articles/${id}`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
+      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
     },
   });
 
-type DateSpanResponse = Promise<AxiosResponse<ArticleDateSpan>>
-export const dateSpan = async (): DateSpanResponse => HTTP
-  .get('articles/dates', {
+export type DateSpanRes = ApiResponse<ArticleDateSpan>;
+export const dateSpan = async (): Promise<DateSpanRes> =>
+  HTTP.get("articles/dates", {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
+      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
     },
   });

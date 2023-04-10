@@ -1,79 +1,39 @@
-<template>
-  <section class="article-paginator has-background-dark">
-    <b-pagination
-      :total="totalResults"
-      v-model="currentPage"
-      :range-before="2"
-      :range-after="2"
-      :per-page="pageSize"
-      :icon-prev="'chevronLeftIcon'"
-      :icon-next="'chevronRightIcon'"
-      aria-next-label="Next page"
-      aria-previous-label="Previous page"
-      aria-page-label="Page"
-      aria-current-label="Current page"
-      class="pagination-controls is-small"
-    >
-    </b-pagination>
-    <section v-if="filtering">
-      <article-filter />
-    </section>
-  </section>
-</template>
+<script setup lang="ts">
+import { useArticleStore } from "@/stores/article.store";
+import { watch, reactive } from "vue";
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import ArticleFilter from '@/components/ArticleFilter.vue';
+const articleStore = reactive(useArticleStore());
 
-@Component({
-  components: { ArticleFilter },
-  computed: {
-    pageSize() {
-      return this.$store.state.as.pageSize;
-    },
-    currentPage: {
-      get() {
-        return this.$store.state.as.currentPage;
-      },
-      async set(currentPage) {
-        this.$store.commit('setCurrentPage', currentPage);
-        await this.$store.dispatch('getArticles');
-        const appElement = document.querySelector('#app');
-        if (appElement) appElement.scrollTo(0, 0);
-      },
-    },
-    totalResults() {
-      return this.$store.state.as.totalResults;
-    },
-    filtering() {
-      return this.$props.showFiltering === 'true';
-    },
-    key() {
-      return this.$vnode.key;
-    },
-  },
-})
-export default class ArticlePaginator extends Vue {
-  @Prop() private showFiltering!: boolean;
-}
+watch(
+  () => articleStore.currentPage,
+  async (nextPage) => {
+    // set new page and retrieve the next set of articles
+    articleStore.setCurrentPage(nextPage);
+    await articleStore.getArticles();
+    // scroll to top of page
+    document.body.scrollIntoView();
+  }
+);
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-.article-paginator {
-  height: auto;
-  padding: 0.3rem 0.5rem;
-  display: flex;
-  flex-flow: row;
-
-  @media screen and (min-width: 768px) {
-    flex-flow: row;
-  }
-
-  .pagination-controls {
-    flex-grow: 1;
-    margin-bottom: 0;
-    margin-right: 0.5rem;
-  }
-}
-</style>
+<template>
+  <o-pagination
+    class="m-0 bg-gray-100 dark:bg-gray-800"
+    link-class="dark:text-gray-100"
+    link-current-class="bg-turquoise-100 border-turquoise-900 text-turquoise-800 dark:text-turquoise-100 dark:bg-turquoise-700 dark:border-turquoise-500"
+    :total="articleStore.totalResults"
+    v-model:current="articleStore.currentPage"
+    range-before="2"
+    range-after="2"
+    order="centered"
+    size="small"
+    :per-page="articleStore.pageSize"
+    icon-prev="chevron-left"
+    icon-next="chevron-right"
+    aria-next-label="Next page"
+    aria-previous-label="Previous page"
+    aria-page-label="Page"
+    aria-current-label="Current page"
+  >
+  </o-pagination>
+</template>

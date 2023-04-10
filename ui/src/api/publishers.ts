@@ -1,6 +1,6 @@
-import { AxiosResponse } from 'axios';
-import { HTTP } from '@/common/http';
-import { Publisher } from '@/common/models/publisher.model';
+import { HTTP } from "@/common/http";
+import type { Publisher } from "@/common/models/publisher.model";
+import type { ApiResponse } from "@/common/models/api.model";
 
-type GetResponse = Promise<AxiosResponse<{ publishers: Publisher[] }>>
-export const get = (): GetResponse => HTTP.get('publishers');
+export type GetPublishersRes = ApiResponse<{ publishers: Publisher[] }>;
+export const get = (): Promise<GetPublishersRes> => HTTP.get("publishers");

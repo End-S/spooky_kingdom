@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .external-link {
+    @apply 
+    text-azure-600 
+    hover:text-azure-500 
+    visited:text-indigo-800 
+    hover:visited:text-indigo-700 
+    dark:text-azure-500 
+    dark:hover:text-azure-400 
+    dark:visited:text-indigo-500 
+    dark:hover:visited:text-indigo-400 
+    hover:underline
+  }
+  .confirm-button {
+    @apply 
+    bg-turquoise-300 
+    hover:bg-turquoise-200 
+    active:bg-turquoise-300 
+    dark:bg-turquoise-700 
+    dark:hover:bg-turquoise-600 
+    dark:active:bg-turquoise-700 
+    focus:outline-none 
+    focus:ring-2 
+    focus:ring-gray-800
+    dark:focus:ring-gray-400
+  }
+  .reject-button {
+    @apply 
+    bg-cerise-300 
+    hover:bg-cerise-200 
+    active:bg-cerise-300 
+    dark:bg-cerise-800 
+    dark:hover:bg-cerise-700 
+    dark:active:bg-cerise-800 
+    focus:outline-none 
+    focus:ring-2 
+    focus:ring-gray-800
+    dark:focus:ring-gray-400
+  }
+  .cancel-button {
+    @apply 
+    bg-gray-300
+    hover:bg-gray-200 
+    active:bg-gray-300 
+    dark:bg-gray-700 
+    dark:hover:bg-gray-600 
+    dark:active:bg-gray-700 
+    focus:outline-none 
+    focus:ring-2 
+    focus:ring-gray-800
+    dark:focus:ring-gray-400
+  }
+}

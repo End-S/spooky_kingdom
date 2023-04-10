@@ -25,10 +25,9 @@ type GetArticlesReq struct {
 
 // UpdateArticleReq struct for an UpdateArticles request
 type UpdateArticleReq struct {
-	ID          uuid.UUID `json:"id"`
-	Description string    `json:"description"`
-	Subject     string    `json:"subject"`
-	Accepted    bool      `json:"accepted"`
+	Description string `json:"description"`
+	Subject     string `json:"subject"`
+	Accepted    bool   `json:"accepted"`
 }
 
 // StoreArticleReq struct for a StoreArticle request

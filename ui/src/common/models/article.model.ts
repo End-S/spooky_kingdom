@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export interface ArticleGetParams {
   pbs?: string[];
   frm?: number;
@@ -11,7 +13,6 @@ export interface ArticleGetParams {
 }
 
 export interface ArticleUpdateBody {
-  id: string;
   description: string;
   subject: Subjects;
   accepted: boolean;
@@ -27,7 +28,7 @@ export interface ArticleFilters {
   order: Ordering;
   subject: Subjects;
   publishers: string[];
-  dRange: [ Date, Date ] | [];
+  dRange: [Date, Date] | [];
   pending?: boolean;
 }
 
@@ -53,30 +54,35 @@ export interface ArticleDateSpan {
 }
 
 export enum Subjects {
-  ALL = '',
-  GHOST = 'ghost',
-  UFO = 'ufo',
-  ABC = 'abc',
+  ALL = "",
+  GHOST = "ghost",
+  UFO = "ufo",
+  ABC = "abc",
 }
 
 export enum ArticleReviewState {
-  ACCEPTED = 'accepted',
-  REVIEW = 'review',
-  REJECTED = 'rejected'
+  ACCEPTED = "accepted",
+  REVIEW = "review",
+  REJECTED = "rejected",
 }
 
 export interface SubjectSelection {
   title: string;
-  value: Subjects | '';
+  value: Subjects | "";
 }
 
 export enum ArticleSortBy {
-  DATE = 'date',
-  TITLE = 'title',
-  DESCRIPTION = 'description',
+  DATE = "date",
+  TITLE = "title",
+  DESCRIPTION = "description",
 }
 
 export enum Ordering {
-  ASCENDING = 'asc',
-  DESCENDING = 'desc',
+  ASCENDING = "asc",
+  DESCENDING = "desc",
 }
+
+export const defaultDateSpan: () => ArticleDateSpan = (): ArticleDateSpan => ({
+  max: DateTime.now().plus({ month: 1 }).toISO() as string,
+  min: DateTime.fromObject({ year: 1990 }).toISO() as string,
+});
