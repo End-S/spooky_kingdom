@@ -31,12 +31,12 @@ func Register(api *echo.Group, h *handler.Handler) {
 	// ARTICLES
 	articles := api.Group("/articles")
 	articles.GET("", h.AC.GetArticles)
-	articles.POST("/update", h.AC.UpdateArticle, admin)
-	articles.POST("/store", h.AC.StoreArticle, key)
+	articles.PATCH("/:id", h.AC.UpdateArticle, admin)
+	articles.POST("", h.AC.StoreArticle, key)
 	articles.DELETE("/:id", h.AC.DeleteArticle, admin)
 	articles.GET("/dates", h.AC.ArticleDateSpan)
 	// PUBLISHERS
 	publishers := api.Group("/publishers")
 	publishers.GET("", h.PC.GetPublishers)
-	publishers.POST("/create", h.PC.CreatePublisher, key)
+	publishers.POST("", h.PC.CreatePublisher, key)
 }

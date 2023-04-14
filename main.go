@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
+	"strings"
 
 	"github.com/End-S/spooky_kingdom/db"
 	"github.com/End-S/spooky_kingdom/db/migration"
@@ -43,6 +44,8 @@ func main() {
 	r.GET("/*", echo.WrapHandler(clientHandler()))
 
 	r.Logger.Fatal(r.Start("localhost:8585"))
+	// TODO env check to run on 0.0.0.0 when in dev
+	// r.Logger.Fatal(r.Start("0.0.0.0:8585"))
 }
 
 func clientHandler() http.Handler {
@@ -51,5 +54,20 @@ func clientHandler() http.Handler {
 		panic(err)
 	}
 	fmt.Println("🫖 Serving embedded static files")
-	return http.FileServer(http.FS(staticClient))
+	fileServer := http.FileServer(http.FS(staticClient))
+
+	// return handler to serve the Vue app
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// strip the prefix from the request URL
+		path := strings.TrimPrefix(r.URL.Path, "/")
+
+		// check if the file in the path exists
+		_, err := fs.Stat(staticClient, path)
+		if err != nil {
+			// if the file doesn't exist, serve the index.html file instead
+			r.URL.Path = "/"
+		}
+		// serve the file using the file server
+		fileServer.ServeHTTP(w, r)
+	})
 }

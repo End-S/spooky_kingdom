@@ -58,6 +58,14 @@ func (ac *ArticleController) GetArticles(c echo.Context) error {
 
 // UpdateArticle function handles the updating of an article
 func (ac *ArticleController) UpdateArticle(c echo.Context) error {
+	// extract param from url
+	id, err := uuid.Parse(c.Param("id"))
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest,
+			responses.NewErrorResponse("Unrecognized UUID"))
+	}
+
 	r := new(requests.UpdateArticleReq)
 
 	// bind json to struct
@@ -70,7 +78,7 @@ func (ac *ArticleController) UpdateArticle(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, responses.ValidationError(err))
 	}
 
-	article, err := ac.articleModel.Update(r)
+	article, err := ac.articleModel.Update(id, r)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, responses.NewErrorResponse("Server error, unable to update article"))

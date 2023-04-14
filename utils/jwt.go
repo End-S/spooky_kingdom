@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/End-S/spooky_kingdom/config"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -26,9 +26,6 @@ func GenerateJWT() string {
 	if err != nil {
 		fmt.Printf("Could not generate JWT: %s", err)
 	}
-
-	// parse using https://godoc.org/github.com/dgrijalva/jwt-go#example-Parse--Hmac
-	// check alg is expected alg
 
 	return tokenString
 }

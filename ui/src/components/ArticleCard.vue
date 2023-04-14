@@ -1,136 +1,92 @@
+<script setup lang="ts">
+import { ArticleReviewState, type Article } from "../common/models/article.model";
+import { formatIso, getSubjectEmoji } from "../common/utils";
+import { DateTime } from "luxon";
+import { usePublisherStore } from "@/stores/publisher.store";
+import { reactive, ref } from "vue";
+import ArticleTag from "./ArticleTag.vue";
+import cloneDeep from "lodash-es/cloneDeep";
+import { useArticleStore } from "@/stores/article.store";
+
+const props = defineProps<{
+  initialArticle: Article;
+  isAdmin: boolean;
+}>();
+
+const editMode = ref(false);
+// initialise local value with initial prop value
+let editableArticle = reactive(cloneDeep(props.initialArticle));
+// set initial article to articles on save
+const articleStore = reactive(useArticleStore());
+const publisherStore = reactive(usePublisherStore());
+
+const save = () => {
+  articleStore.updateArticle(editableArticle);
+};
+
+const reject = () => {
+  editableArticle.state = ArticleReviewState.REJECTED;
+  articleStore.updateArticle(editableArticle);
+  articleStore.getArticles();
+};
+</script>
+
 <template>
-  <div class="article-card">
-    <b-taglist attached class="mr-1 mb-0">
-      <span class="tag is-primary">{{ article.datePublished | time }}</span>
-      <span class="tag is-info" v-if="publishers">
-        {{ article.publisher.id | publisherLabel }}
-      </span>
-      <span class="tag is-dark1">
-        <b-tooltip :label="article.type">
-          {{ getSubjectEmoji(article.type) }}
-        </b-tooltip>
-      </span>
-    </b-taglist>
-    <div class="has-text-left">
-      <a :href="article.link" rel="nofollow noopener" target="_blank">{{
-        article.title
-      }}</a>
+  <div>
+    <div class="flex">
+      <ArticleTag class="rounded-l-md bg-gray-400 dark:bg-gray-700">{{
+        formatIso(initialArticle.datePublished, DateTime.DATE_MED)
+      }}</ArticleTag>
+      <ArticleTag class="bg-azure-200 dark:bg-azure-400 dark:text-black">{{
+        publisherStore.getPublisherLabel(initialArticle.publisher.id)
+      }}</ArticleTag>
+      <ArticleTag class="rounded-r-md bg-gray-400 dark:bg-gray-700">{{
+        getSubjectEmoji(initialArticle.type)
+      }}</ArticleTag>
     </div>
-    <div v-if="!editMode" class="has-text-left">
-      <p>
-        {{ article.description }}
-      </p>
-      <b-button
+    <a
+      :href="initialArticle.link"
+      rel="nofollow noopener"
+      target="_blank"
+      class="text-sm md:text-base external-link"
+      >{{ initialArticle.title }}</a
+    >
+    <div class="mb-2" v-if="!editMode">
+      <p class="text-sm md:text-base">{{ initialArticle.description }}</p>
+      <o-button
         v-if="isAdmin"
-        @click="editToggle"
-        icon-right="Edit3Icon"
-        :outlined="true"
-        type="is-text"
-        class="is-dark2 pl-1"
-        size="is-small"
-        aria-controls="editDescription"
-        >Edit</b-button
+        class="mt-2 ring-1 ring-gray-800 dark:ring-gray-200 hover:bg-turquoise-200 active:bg-turquoise-300 dark:hover:bg-turquoise-600 dark:active:bg-turquoise-700 active:ring-2"
+        @click="editMode = !editMode"
       >
+        <div class="flex gap-1 items-center">
+          <o-icon class="text-xs" icon="fa-pen-to-square"></o-icon>
+          <span class="text-xs font-light md:inline">Edit</span>
+        </div>
+      </o-button>
     </div>
-    <div v-if="editMode" class="has-text-left">
-      <b-input
-        id="description"
-        type="textarea"
-        maxlength="500"
-        v-model="editableArticle.description"
-      >
-      </b-input>
-    </div>
-    <div class="admin-buttons">
-      <b-button
-        @click="cancelChanges"
-        v-if="isAdmin && editMode"
-        class="is-dark2"
-        aria-controls="cancelChanges"
-      >
-        Cancel
-      </b-button>
-      <b-button
-        @click="saveChanges"
-        v-if="isAdmin && editMode"
-        class="is-success"
-        aria-controls="saveChanges"
-      >
-        Save
-      </b-button>
-      <b-button
-        v-if="isAdmin && editMode"
-        @click="rejectArticle"
-        icon-right="DeleteIcon"
-        class="is-danger"
-        aria-controls="rejectArticle"
-        >Reject</b-button
-      >
+    <div v-if="editMode && isAdmin">
+      <o-field label="Description">
+        <o-input maxlength="500" type="textarea" v-model="editableArticle.description"></o-input>
+      </o-field>
+      <div class="flex gap-2 justify-end">
+        <o-button class="cancel-button" @click="editMode = !editMode">Cancel</o-button>
+        <o-button
+          class="reject-button"
+          @click="
+            editMode = !editMode;
+            reject();
+          "
+          >Reject</o-button
+        >
+        <o-button
+          class="confirm-button"
+          @click="
+            editMode = !editMode;
+            save();
+          "
+          >Save</o-button
+        >
+      </div>
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { cloneDeep } from 'lodash-es';
-import { getSubjectEmoji } from '@/common/utils';
-import { Article, ArticleReviewState } from '@/common/models/article.model';
-import { Publisher } from '@/common/models/publisher.model';
-
-@Component({
-  computed: {
-    publishers(): Publisher[] {
-      return this.$store.state.ps.publishers;
-    },
-  },
-})
-export default class ArticleCard extends Vue {
-  // ! tell typescript the props will not be undefined
-  @Prop() private article!: Article;
-  @Prop() private isAdmin!: boolean;
-  private editMode = false;
-  private editableArticle: Article = cloneDeep(this.article);
-  getSubjectEmoji = getSubjectEmoji;
-
-  editToggle() {
-    this.editMode = !this.editMode;
-  }
-
-  cancelChanges() {
-    this.editableArticle = cloneDeep(this.article);
-    this.editToggle();
-  }
-
-  async saveChanges() {
-    await this.$store.dispatch('updateArticle', this.editableArticle);
-    this.editToggle();
-  }
-
-  async rejectArticle() {
-    this.editableArticle.state = ArticleReviewState.REJECTED;
-    await this.$store.dispatch('updateArticle', this.editableArticle);
-    await this.$store.dispatch('getArticles', this.$store);
-  }
-}
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-.article-card {
-  max-width: 60rem;
-  margin: 2rem 0.5rem;
-
-  .title-content {
-    display: flex;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  .admin-buttons {
-    display: flex;
-    gap: 0.5rem;
-  }
-}
-</style>

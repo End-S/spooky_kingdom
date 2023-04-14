@@ -1,0 +1,183 @@
+/* File based on example found here: https://github.com/oruga-ui/demo-tailwindcss/blob/master/src/assets/oruga-tailwindcss.css */
+
+/* Button */
+
+.btn {
+  @apply 
+  font-bold 
+  py-2 
+  px-4 
+  rounded;
+}
+
+/* Field */
+
+.field-label {
+  @apply 
+  dark:text-gray-200
+}
+
+/* Switch */
+
+.switch {
+  @apply 
+  bg-gradient-to-r 
+  from-orange-200 
+  to-gray-900;
+}
+
+.switch-label {
+  @apply hidden;
+}
+
+/* Dropdown */
+
+.dropdown-menu {
+  @apply 
+  dark:bg-gray-900 
+  bg-gray-100
+}
+
+.dropdown-item {
+  @apply 
+  hover:!bg-turquoise-200 
+  dark:hover:!bg-turquoise-500 
+  dark:hover:text-white 
+  dark:text-white
+}
+
+.dropdown-item-active {
+  @apply 
+  bg-turquoise-300 
+  text-black
+  dark:text-white
+  dark:bg-turquoise-400 
+  dark:hover:!bg-turquoise-500
+}
+
+.dropdown-trigger {
+ @apply  
+ dark:bg-gray-700 
+ dark:hover:!bg-gray-600
+}
+
+/* Radio */
+
+.radio-check {
+  @apply 
+  bg-[url('./radio.svg')]
+  dark:bg-[url('./dark-radio.svg')]
+}
+
+.radio-checked {
+  @apply 
+  bg-[url('./radio-check.svg')]
+  dark:bg-[url('./dark-radio-check.svg')]
+}
+
+/* Input */
+.input {
+  @apply 
+  outline-turquoise-200 
+  dark:bg-gray-900 
+  dark:text-white 
+  dark:outline-turquoise-400 
+  focus-visible:outline
+}
+
+/* Datepicker */
+
+.datepicker-dropdown {
+  @apply 
+  dark:bg-black
+}
+
+.month-cell,
+.table-cell {
+  @apply 
+  dark:text-white
+}
+
+.month-cell-unselectable,
+.table-cell-unselectable {
+  @apply 
+  dark:text-gray-700
+}
+
+.month-cell-selected {
+  @apply 
+  !bg-turquoise-500
+  dark:!bg-turquoise-400
+}
+
+.month-cell-within-selected {
+  @apply 
+  !bg-turquoise-500/75
+  dark:!bg-turquoise-400/75
+}
+
+.month-cell-first-hovered {
+  @apply 
+  !bg-turquoise-400
+  text-black
+  dark:!bg-turquoise-300 
+}
+
+.month-cell-within-hovered {
+  @apply 
+  !bg-turquoise-400/75
+  text-black
+  dark:!bg-turquoise-300/75 
+}
+
+.month-cell-last-hovered {
+  @apply 
+  !bg-turquoise-400
+  text-black
+  dark:!bg-turquoise-300 
+}
+
+.table-head-cell {
+  @apply 
+  dark:text-turquoise-400
+}
+
+.next-btn,
+.prev-btn {
+  @apply 
+  dark:text-gray-100
+}
+
+.modal-content {
+  @apply 
+  dark:!bg-gray-800 
+  p-4
+}
+
+/* Input Items */
+
+.input-item {
+  @apply 
+  bg-cyan-200
+  text-black
+  dark:text-white
+  dark:bg-cyan-800
+}
+
+.o-inputit__container {
+  @apply 
+  bg-transparent 
+  shadow-none
+}
+
+/* Skeleton */
+
+.skeleton-animation {
+  @apply 
+  bg-gradient-to-r 
+  from-gray-200 
+  to-gray-300 
+  animate-pulse 
+  dark:from-gray-900 
+  dark:to-black
+}

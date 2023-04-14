@@ -95,7 +95,7 @@ func (am *ArticleModel) List(req *requests.GetArticlesReq, assessPending bool) (
 }
 
 // Update updates an article and returns the updated article
-func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error) {
+func (am *ArticleModel) Update(id uuid.UUID, req *requests.UpdateArticleReq) (*Article, error) {
 	var article Article
 
 	articleState := "accepted"
@@ -104,14 +104,14 @@ func (am *ArticleModel) Update(req *requests.UpdateArticleReq) (*Article, error)
 		articleState = "rejected"
 	}
 
-	res := am.db.Table("articles").Where("article_id = ?", req.ID).
+	res := am.db.Table("articles").Where("article_id = ?", id).
 		Updates(Article{Description: req.Description, ArticleType: req.Subject, ArticleState: articleState})
 
 	if res.Error != nil {
 		return nil, res.Error
 	}
 
-	am.db.Table("articles").First(&article, req.ID)
+	am.db.Table("articles").First(&article, id)
 
 	return &article, res.Error
 }

@@ -2,7 +2,7 @@ package responses
 
 // LoginResponse struct
 type LoginResponse struct {
-	JWT string `json:"jwtToken"`
+	JWT string `json:"jwt"`
 }
 
 // NewLoginResponse creates a new login json response
