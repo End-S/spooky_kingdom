@@ -1,21 +1,81 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import Oruga from "@oruga-ui/oruga-next";
-
+import {
+  Config,
+  Notification,
+  OButton,
+  ODatepicker,
+  ODropdown,
+  OIcon,
+  OInput,
+  OField,
+  ORadio,
+  OModal,
+  OPagination,
+  ODropdownItem,
+  OSkeleton,
+} from "@oruga-ui/oruga-next";
 import App from "./App.vue";
 import router from "./router";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-library.add(fas);
+import {
+  faPenToSquare,
+  faFilter,
+  faCircleHalfStroke,
+  faNewspaper,
+  faMoon,
+  faSun,
+  faCalendar,
+  faCancel,
+  faChevronLeft,
+  faChevronRight,
+  faWarning,
+  faCaretDown,
+  faBars,
+  faEnvelope,
+  faEye,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+library.add(
+  faPenToSquare,
+  faFilter,
+  faCircleHalfStroke,
+  faNewspaper,
+  faMoon,
+  faSun,
+  faCalendar,
+  faCancel,
+  faChevronLeft,
+  faChevronRight,
+  faWarning,
+  faCaretDown,
+  faBars,
+  faEnvelope,
+  faEye,
+  faTimes
+);
 
 import "@oruga-ui/oruga-next/dist/oruga-full.css";
 import "./assets/main.css";
 import "./assets/oruga-tailwindcss.css";
 
-const app = createApp(App).use(Oruga, {
-  iconPack: "fas",
+const app = createApp(App);
+app.component("OButton", OButton);
+app.component("ODatepicker", ODatepicker);
+app.component("ODropdown", ODropdown);
+app.component("OIcon", OIcon);
+app.component("OInput", OInput);
+app.component("OField", OField);
+app.component("ORadio", ORadio);
+app.component("OModal", OModal);
+app.component("OPagination", OPagination);
+app.component("ODropdownItem", ODropdownItem);
+app.component("OSkeleton", OSkeleton);
+app.use(Notification);
+app.use(Config, {
+  iconPack: "fa",
   iconComponent: "vue-fontawesome",
   button: {
     override: true,
