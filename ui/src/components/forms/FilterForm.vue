@@ -7,8 +7,8 @@ import { capitalize } from "vue";
 import { DateTime } from "luxon";
 import { filterSubjects } from "@/common/utils";
 import type { FilterFormValue } from "@/common/models/forms.model";
-import { omit } from "lodash";
 import { usePublisherStore } from "@/stores/publisher.store";
+import omit from "lodash-es/omit";
 
 const emit = defineEmits<{
   (e: "submit"): void;
@@ -54,6 +54,8 @@ const submit = async (formValue: FilterFormValue) => {
       v-model="formValue.dRange"
       placeholder="Date range..."
       icon="calendar"
+      icon-prev="fa-chevron-left"
+      icon-next="fa-chevron-right"
       :maxDate="maxDate"
       :minDate="minDate"
       type="month"

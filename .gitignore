@@ -1,6 +1,7 @@
+# spooky kingdom specfic
 config/*.toml
-
 spooky_kingdom
+stats.html
 
 # UI
 # Logs
