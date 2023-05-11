@@ -42,7 +42,7 @@ type StoreArticleReq struct {
 	MatchedTerms  []string `json:"matchedTerms"`
 }
 
-var validSubjects = []string{"ghost", "ufo", "abc"}
+var validSubjects = []string{"ghost", "ufo", "cryptid"}
 var maxDescLen = 500
 var maxTitleLen = 2000
 var maxLinkLen = 2000

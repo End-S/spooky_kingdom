@@ -57,7 +57,7 @@ export enum Subjects {
   ALL = "",
   GHOST = "ghost",
   UFO = "ufo",
-  ABC = "abc",
+  CRYPTID = "cryptid",
 }
 
 export enum ArticleReviewState {

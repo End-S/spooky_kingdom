@@ -8,7 +8,7 @@ export function getSubjectEmoji(subject: Subjects): string {
     [Subjects.ALL]: "",
     [Subjects.GHOST]: "👻 ",
     [Subjects.UFO]: "🛸",
-    [Subjects.ABC]: "🦁",
+    [Subjects.CRYPTID]: "🦄",
   };
   return subjectEmojis[subject] || "?";
 }
@@ -23,8 +23,8 @@ export const availableSubjects: SubjectSelection[] = [
     value: Subjects.UFO,
   },
   {
-    title: `${getSubjectEmoji(Subjects.ABC)}  ${upperCase(Subjects.ABC)}`,
-    value: Subjects.ABC,
+    title: `${getSubjectEmoji(Subjects.CRYPTID)}  ${capitalize(Subjects.CRYPTID)}`,
+    value: Subjects.CRYPTID,
   },
 ];
 

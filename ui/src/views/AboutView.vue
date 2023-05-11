@@ -22,8 +22,8 @@
       to a minimum, crawlers crawl a page once every 20 seconds before moving on to the next page.
     </p>
     <p>
-      Headlines are placed into three categories; ghosts, UFOs & ABCs (Alien Big Cats). Have fun
-      exploring the archive!
+      Headlines are placed into three categories; ghosts, UFOs & Cryptids. Have fun exploring the
+      archive!
       <span class="text-xs"> - and maintain a healthy skepticism...</span>
     </p>
     <h3 class="text-xl underline">Archived Publishers</h3>

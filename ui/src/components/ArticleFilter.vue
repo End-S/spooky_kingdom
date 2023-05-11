@@ -28,7 +28,7 @@ const modalActive: Ref<boolean> = ref(false);
       <!-- dropdown content -->
       <div
         v-if="menuExpanded"
-        class="absolute right-0 bg-gray-100 dark:bg-gray-800 p-4 w-96 rounded-sm z-20"
+        class="absolute right-0 bg-gray-100 dark:bg-gray-800 p-2 md:p-4 w-[26rem] rounded-sm z-20"
       >
         <FilterForm @submit="menuExpanded = false" @cancel="menuExpanded = false"></FilterForm>
       </div>
@@ -49,7 +49,7 @@ const modalActive: Ref<boolean> = ref(false);
     <!-- modal trigger button ends -->
 
     <!-- modal content -->
-    <o-modal v-model:active="modalActive" class="p-4">
+    <o-modal v-model:active="modalActive" class="p-2">
       <FilterForm @submit="modalActive = false" @cancel="modalActive = false"></FilterForm>
     </o-modal>
     <!-- modal content ends -->
