@@ -27,7 +27,6 @@
       <span class="text-xs"> - and maintain a healthy skepticism...</span>
     </p>
     <h3 class="text-xl underline">Archived Publishers</h3>
-    <p class="text-sm">If you enjoy their content please consider supporting them.</p>
     <ul class="list-inside">
       <li>
         <o-icon class="text-sm mr-2" icon="newspaper"></o-icon>
@@ -37,6 +36,16 @@
           target="_blank"
           class="external-link"
           >Hampshire Live</a
+        >
+      </li>
+      <li>
+        <o-icon class="text-sm mr-2" icon="newspaper"></o-icon>
+        <a
+          href="https://www.inverness-courier.co.uk/subscribe/"
+          rel="nofollow noopener"
+          target="_blank"
+          class="external-link"
+          >Inverness Courier</a
         >
       </li>
       <li>
@@ -67,6 +76,16 @@
           target="_blank"
           class="external-link"
           >Manchester Evening News</a
+        >
+      </li>
+      <li>
+        <o-icon class="text-sm mr-2" icon="newspaper"></o-icon>
+        <a
+          href="https://www.norfolklive.co.uk/"
+          rel="nofollow noopener"
+          target="_blank"
+          class="external-link"
+          >Norfolk Live</a
         >
       </li>
       <li>
