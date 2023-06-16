@@ -14,6 +14,7 @@ import {
   OPagination,
   ODropdownItem,
   OSkeleton,
+  OInputitems,
 } from "@oruga-ui/oruga-next";
 import App from "./App.vue";
 import router from "./router";
@@ -73,6 +74,7 @@ app.component("OModal", OModal);
 app.component("OPagination", OPagination);
 app.component("ODropdownItem", ODropdownItem);
 app.component("OSkeleton", OSkeleton);
+app.component("OInputitems", OInputitems);
 app.use(Notification);
 app.use(Config, {
   iconPack: "fa",
