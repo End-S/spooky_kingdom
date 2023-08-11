@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/End-S/spooky_kingdom/db"
-	"github.com/End-S/spooky_kingdom/db/migration"
-	"github.com/End-S/spooky_kingdom/handler"
-	"github.com/End-S/spooky_kingdom/router"
 	"github.com/labstack/echo/v4"
+	"github.com/r-rayns/spooky_kingdom/db"
+	"github.com/r-rayns/spooky_kingdom/db/migration"
+	"github.com/r-rayns/spooky_kingdom/handler"
+	"github.com/r-rayns/spooky_kingdom/router"
 )
 
 //go:embed ui/dist

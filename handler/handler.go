@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/End-S/spooky_kingdom/controllers"
-	"github.com/End-S/spooky_kingdom/models"
+	"github.com/r-rayns/spooky_kingdom/controllers"
+	"github.com/r-rayns/spooky_kingdom/models"
 	"gorm.io/gorm"
 )
 

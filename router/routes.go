@@ -3,11 +3,11 @@ package router
 import (
 	"net/http"
 
-	"github.com/End-S/spooky_kingdom/config"
-	"github.com/End-S/spooky_kingdom/controllers/responses"
-	"github.com/End-S/spooky_kingdom/handler"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/r-rayns/spooky_kingdom/config"
+	"github.com/r-rayns/spooky_kingdom/controllers/responses"
+	"github.com/r-rayns/spooky_kingdom/handler"
 )
 
 // Register applies all routes to the provided router group

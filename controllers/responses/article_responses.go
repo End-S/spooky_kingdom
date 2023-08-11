@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/End-S/spooky_kingdom/models"
 	"github.com/google/uuid"
+	"github.com/r-rayns/spooky_kingdom/models"
 )
 
 type ArticleResponseBody struct {

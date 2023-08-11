@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/End-S/spooky_kingdom/utils"
 	"github.com/google/uuid"
+	"github.com/r-rayns/spooky_kingdom/utils"
 )
 
 // GetArticlesReq struct for a GetArticles request

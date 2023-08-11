@@ -3,8 +3,8 @@ package models
 import (
 	"errors"
 
-	"github.com/End-S/spooky_kingdom/controllers/requests"
 	"github.com/google/uuid"
+	"github.com/r-rayns/spooky_kingdom/controllers/requests"
 	"gorm.io/gorm"
 )
 

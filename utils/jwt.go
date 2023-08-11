@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/End-S/spooky_kingdom/config"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"github.com/r-rayns/spooky_kingdom/config"
 )
 
 // GenerateJWT generates a new JWT token for authentication

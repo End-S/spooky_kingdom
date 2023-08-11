@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 
-	"github.com/End-S/spooky_kingdom/config"
+	"github.com/r-rayns/spooky_kingdom/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

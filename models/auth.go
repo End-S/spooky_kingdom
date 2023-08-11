@@ -3,9 +3,9 @@ package models
 import (
 	"errors"
 
-	"github.com/End-S/spooky_kingdom/config"
-	"github.com/End-S/spooky_kingdom/controllers/requests"
-	"github.com/End-S/spooky_kingdom/utils"
+	"github.com/r-rayns/spooky_kingdom/config"
+	"github.com/r-rayns/spooky_kingdom/controllers/requests"
+	"github.com/r-rayns/spooky_kingdom/utils"
 	"gorm.io/gorm"
 )
 

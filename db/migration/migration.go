@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/End-S/spooky_kingdom/config"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres" // required
 	_ "github.com/golang-migrate/migrate/v4/source/file"       // required
+	"github.com/r-rayns/spooky_kingdom/config"
 )
 
 func MigrateUp() {

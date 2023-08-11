@@ -3,10 +3,10 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/End-S/spooky_kingdom/controllers/requests"
-	"github.com/End-S/spooky_kingdom/controllers/responses"
-	"github.com/End-S/spooky_kingdom/models"
 	"github.com/labstack/echo/v4"
+	"github.com/r-rayns/spooky_kingdom/controllers/requests"
+	"github.com/r-rayns/spooky_kingdom/controllers/responses"
+	"github.com/r-rayns/spooky_kingdom/models"
 )
 
 //PublisherController struct

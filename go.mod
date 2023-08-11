@@ -1,4 +1,4 @@
-module github.com/End-S/spooky_kingdom
+module github.com/r-rayns/spooky_kingdom
 
 go 1.16
 

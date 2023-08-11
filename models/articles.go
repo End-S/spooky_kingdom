@@ -7,9 +7,9 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"github.com/End-S/spooky_kingdom/controllers/requests"
-	"github.com/End-S/spooky_kingdom/utils"
 	"github.com/google/uuid"
+	"github.com/r-rayns/spooky_kingdom/controllers/requests"
+	"github.com/r-rayns/spooky_kingdom/utils"
 )
 
 // ArticleModel struct
